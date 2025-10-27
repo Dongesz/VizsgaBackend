@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using BackEnd.Domain.Models;
 
 namespace BackEnd
 {
@@ -7,16 +9,31 @@ namespace BackEnd
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            // 1?? CORS hozzáadása
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader();
+                });
+            });
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            // 2?? DB context regisztrálása (ez legyen itt!)
+            var conn = builder.Configuration.GetConnectionString("DefaultConnection");
+            builder.Services.AddDbContext<DongeszhCastLContext>(options =>
+                options.UseMySql(conn, ServerVersion.AutoDetect(conn)));
+
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            // 3?? CORS engedélyezése
+            app.UseCors("AllowAll");
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -24,13 +41,9 @@ namespace BackEnd
             }
 
             app.UseHttpsRedirection();
-
             app.UseAuthorization();
-
-
             app.MapControllers();
-
-            app.Run();
+            app.Run(); ;
         }
-    } 
+    }
 }

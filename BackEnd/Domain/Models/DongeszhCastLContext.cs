@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql.Scaffolding.Internal;
 
-namespace BackEnd.Models;
+namespace BackEnd.Domain.Models;
 
 public partial class DongeszhCastLContext : DbContext
 {
@@ -21,7 +21,7 @@ public partial class DongeszhCastLContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseMySql("server=s58.tarhely.com;port=3306;database=dongeszh_CastL;uid=dongeszh_dongesz;pwd=DorinaMate1;charset=utf8mb4;sslmode=None", Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.11.14-mariadb"));
+        => optionsBuilder.UseMySql("server=s58.tarhely.com;port=3306;database=dongeszh_CastL;uid=dongeszh_dongesz;pwd=DorinaMate1;charset=utf8mb4;sslmode=None", ServerVersion.Parse("10.11.14-mariadb"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

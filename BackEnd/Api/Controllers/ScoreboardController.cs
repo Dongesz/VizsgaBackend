@@ -6,9 +6,8 @@ namespace BackEnd.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UsersController : ControllerBase
+    public class ScoreboardController : ControllerBase
     {
         
-
     }
 }

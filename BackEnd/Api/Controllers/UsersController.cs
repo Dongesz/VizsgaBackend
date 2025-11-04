@@ -46,7 +46,7 @@ namespace BackEnd.Api.Controllers
             return NoContent();
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult Delete(ulong id)
         {
             var user = _context.Users.Find(id);

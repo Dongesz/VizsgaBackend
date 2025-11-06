@@ -1,4 +1,6 @@
-﻿using BackEnd.Domain.Models;
+﻿using AutoMapper;
+using BackEnd.Application.DTOs;
+using BackEnd.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,52 +11,99 @@ namespace BackEnd.Api.Controllers
     public class UsersController : ControllerBase
     {
         private readonly DongeszhCastLContext _context;
-
-        public UsersController(DongeszhCastLContext context)
+        private readonly IMapper _mapper;
+        public UsersController(DongeszhCastLContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public IActionResult GetAll()
         {
-            return Ok(_context.Users.ToList());
+            try
+            {
+                var user = _context.Users.ToList();
+                var userDto = _mapper.Map<List<UsersGetDto>>(user);
+                return Ok(userDto);
+            }
+            catch (Exception ex)
+            {
+
+                return Problem(ex.Message);
+            }
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(ulong id)
         {
-            var user = _context.Users.Find(id);
-            if (user == null) return NotFound();
-            return Ok(user);
+            try
+            {
+                var user = _context.Users.Find(id);
+                var userDto = _mapper.Map<UsersGetDto>(user);
+                return Ok(userDto);
+            }
+            catch (Exception ex)
+            {
+
+                return Problem(ex.Message);
+            }
         }
 
         [HttpPost]
         public IActionResult Create(User user)
         {
-            _context.Users.Add(user);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
+            try
+            {
+                _context.Users.Add(user);
+                _context.SaveChanges();
+                var userDto = _mapper.Map<UsersSendDto>(user);
+                return CreatedAtAction(nameof(GetById), new { id = user.Id }, userDto);
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message);
+            }            
         }
 
         [HttpPut("{id}")]
         public IActionResult Update(ulong id, User user)
         {
-            if (id != user.Id) return BadRequest();
-            _context.Entry(user).State = EntityState.Modified;
-            _context.SaveChanges();
-            return NoContent();
+            try
+            {
+                _context.Entry(user).State = EntityState.Modified;
+                _context.SaveChanges();
+                var userDto = _mapper.Map<UsersSendDto>(user);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+
+                return Problem(ex.Message);
+            }
+            
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(ulong id)
         {
-            var user = _context.Users.Find(id);
-            if (user == null) return NotFound();
-            _context.Users.Remove(user);
-            _context.SaveChanges();
-            return NoContent();
-        }
+            try
+            {
+                var user = _context.Users.Find(id);
 
+                var scores = _context.Scoreboards.Where(s => s.UserId == id);
+                _context.Scoreboards.RemoveRange(scores);
+
+                _context.Users.Remove(user);
+                _context.SaveChanges();
+                var userDto = _mapper.Map<UsersSendDto>(user);
+                return NoContent();
+
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message);
+            }
+        }
     }
 }

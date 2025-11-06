@@ -11,8 +11,8 @@ namespace BackEnd.Api.Controllers
     [Route("api/[controller]")]
     public class ScoreboardController : ControllerBase
     {
-        private readonly DongeszhCastLContext _context; // link a contexthez
-        private readonly IMapper _mapper;
+        private readonly DongeszhCastLContext _context; // referencia a contexthez
+        private readonly IMapper _mapper; // referencia az AutoMapperre
         
         public ScoreboardController(DongeszhCastLContext context, IMapper mapper)
         {
@@ -41,9 +41,17 @@ namespace BackEnd.Api.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(ulong id)
         {
-            var scoreboard = _context.Scoreboards.Find(id);
-            var scoredto = _mapper.Map<List<ScoreBoardDto>>(scoreboard);
-            return Ok(scoredto);
+            try
+            {
+                var scoreboard = _context.Scoreboards.Find(id);
+                var scoredto = _mapper.Map<List<ScoreBoardDto>>(scoreboard);
+                return Ok(scoredto);
+            }
+            catch (Exception ex)
+            {
+
+                return Problem(ex.Message);
+            }
         }
 
         [HttpPost]

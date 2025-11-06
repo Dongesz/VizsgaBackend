@@ -1,6 +1,6 @@
 ﻿namespace BackEnd.Application.DTOs
 {
-    public class UserSendDto
+    public class UsersSendDto
     {
         public string Name { get; set; } = null!;
 

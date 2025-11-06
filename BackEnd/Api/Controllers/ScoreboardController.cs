@@ -1,4 +1,7 @@
-﻿using BackEnd.Domain.Models;
+﻿using AutoMapper;
+using BackEnd.Application.DTOs;
+using BackEnd.Application.Mappers;
+using BackEnd.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,23 +11,30 @@ namespace BackEnd.Api.Controllers
     [Route("api/[controller]")]
     public class ScoreboardController : ControllerBase
     {
-        private readonly DongeszhCastLContext _context;
-        public ScoreboardController(DongeszhCastLContext context)
+        private readonly DongeszhCastLContext _context; // link a contexthez
+        private readonly IMapper _mapper;
+        
+        public ScoreboardController(DongeszhCastLContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public IActionResult GetAll()
         {
-            return Ok(_context.Scoreboards.ToList());
+            var scoreboard = _context.Scoreboards.ToList();
+            var scoredto = _mapper.Map<List<ScoreBoardDto>>(scoreboard);
+
+            return Ok(scoredto);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(ulong id)
         {
             var scoreboard = _context.Scoreboards.Find(id);
-            return Ok(scoreboard);
+            var scoredto = _mapper.Map<List<ScoreBoardDto>>(scoreboard);
+            return Ok(scoredto);
         }
 
         [HttpPost]

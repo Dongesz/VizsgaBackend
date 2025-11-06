@@ -29,6 +29,9 @@ namespace BackEnd
             builder.Services.AddDbContext<DongeszhCastLContext>(options =>
                 options.UseMySql(conn, ServerVersion.AutoDetect(conn)));
 
+            builder.Services.AddAutoMapper(typeof(BackEnd.Application.Mappers.AutoMapperProfile).Assembly);
+
+
             var app = builder.Build();
 
             // 3?? CORS engedélyezése

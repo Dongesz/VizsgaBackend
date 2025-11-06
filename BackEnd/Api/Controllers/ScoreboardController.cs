@@ -23,10 +23,19 @@ namespace BackEnd.Api.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var scoreboard = _context.Scoreboards.ToList();
-            var scoredto = _mapper.Map<List<ScoreBoardDto>>(scoreboard);
+            try
+            {
+                var scoreboard = _context.Scoreboards.ToList();
+                var scoredto = _mapper.Map<List<ScoreBoardDto>>(scoreboard);
 
-            return Ok(scoredto);
+                return Ok(scoredto);
+            }
+            catch (Exception ex)
+            {
+
+                return Problem(ex.Message);
+            }
+            
         }
 
         [HttpGet("{id}")]

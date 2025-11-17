@@ -11,10 +11,10 @@ namespace BackEnd.Api.Controllers
     [Route("api/[controller]")]
     public class ScoreboardController : ControllerBase
     {
-        private readonly DongeszhCastLContext _context; // referencia a contexthez
+        private readonly DatabaseContext _context; // referencia a contexthez
         private readonly IMapper _mapper; // referencia az AutoMapperre
         
-        public ScoreboardController(DongeszhCastLContext context, IMapper mapper)
+        public ScoreboardController(DatabaseContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
@@ -39,7 +39,7 @@ namespace BackEnd.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(ulong id)
+        public IActionResult GetById(int id)
         {
             try
             {
@@ -63,7 +63,7 @@ namespace BackEnd.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(ulong id,Scoreboard scoreboard)
+        public IActionResult Update(int id,Scoreboard scoreboard)
         {
             _context.Entry(scoreboard).State = EntityState.Modified;
             _context.SaveChanges();
@@ -72,7 +72,7 @@ namespace BackEnd.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(ulong id)
+        public IActionResult Delete(int id)
         {
             var scoreboard = _context.Scoreboards.Find(id);
             _context.Scoreboards.Remove(scoreboard);

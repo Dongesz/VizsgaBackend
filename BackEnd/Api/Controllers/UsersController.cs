@@ -10,9 +10,9 @@ namespace BackEnd.Api.Controllers
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
-        private readonly DongeszhCastLContext _context;
+        private readonly DatabaseContext _context;
         private readonly IMapper _mapper;
-        public UsersController(DongeszhCastLContext context, IMapper mapper)
+        public UsersController(DatabaseContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
@@ -35,7 +35,7 @@ namespace BackEnd.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(ulong id)
+        public IActionResult GetById(int id)
         {
             try
             {
@@ -67,7 +67,7 @@ namespace BackEnd.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(ulong id, User user)
+        public IActionResult Update(int id, User user)
         {
             try
             {
@@ -85,7 +85,7 @@ namespace BackEnd.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(ulong id)
+        public IActionResult Delete(int id)
         {
             try
             {

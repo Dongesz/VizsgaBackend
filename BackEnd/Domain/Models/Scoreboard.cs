@@ -10,9 +10,9 @@ public partial class Scoreboard
     public int UserId { get; set; }
 
     public int? TotalScore { get; set; }
+    public int? TotalXp { get; set; }
 
     public DateTime? LastUpdated { get; set; }
 
-    [JsonIgnore]
     public virtual User User { get; set; } = null!;
 }

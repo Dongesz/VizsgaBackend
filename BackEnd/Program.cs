@@ -26,7 +26,7 @@ namespace BackEnd
 
             // 2?? DB context regisztrálása (ez legyen itt!)
             var conn = builder.Configuration.GetConnectionString("DefaultConnection");
-            builder.Services.AddDbContext<DongeszhCastLContext>(options =>
+            builder.Services.AddDbContext<DatabaseContext>(options =>
             options.UseMySql(conn, ServerVersion.AutoDetect(conn)));
 
             builder.Services.AddAutoMapper(typeof(BackEnd.Application.Mappers.AutoMapperProfile).Assembly);

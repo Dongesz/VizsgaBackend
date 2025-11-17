@@ -26,7 +26,7 @@ namespace BackEnd.Api.Controllers
             try
             {
                 var scoreboard = _context.Scoreboards.ToList();
-                var scoredto = _mapper.Map<List<ScoreBoardDto>>(scoreboard);
+                var scoredto = _mapper.Map<List<ScoreboardGetDto>>(scoreboard);
 
                 return Ok(scoredto);
             }
@@ -44,7 +44,7 @@ namespace BackEnd.Api.Controllers
             try
             {
                 var scoreboard = _context.Scoreboards.Find(id);
-                var scoredto = _mapper.Map<List<ScoreBoardDto>>(scoreboard);
+                var scoredto = _mapper.Map<List<ScoreboardGetDto>>(scoreboard);
                 return Ok(scoredto);
             }
             catch (Exception ex)

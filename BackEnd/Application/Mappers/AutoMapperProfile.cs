@@ -10,7 +10,7 @@ namespace BackEnd.Application.Mappers
         {
             CreateMap<User, UsersGetDto>();
             CreateMap<User, UsersSendDto>();
-            CreateMap<Scoreboard, ScoreBoardDto>();
+            CreateMap<Scoreboard, ScoreboardGetDto>();
         }
     }
 }

@@ -8,10 +8,13 @@ namespace BackEnd.Application.Mappers
     {
         public AutoMapperProfile()
         {
-            CreateMap<User, UsersGetDto>();
-            CreateMap<User, UsersSendDto>();
-            CreateMap<Scoreboard, ScoreboardGetDto>();
-            CreateMap<Scoreboard, ScoreboardSendDto>();
+            CreateMap<User, UsersGetDto>();        
+            CreateMap<UsersSendDto, User>();       
+            CreateMap<User, UsersSendDto>();       
+
+            CreateMap<Scoreboard, ScoreboardGetDto>();   
+            CreateMap<ScoreboardSendDto, Scoreboard>();  
+            CreateMap<Scoreboard, ScoreboardSendDto>();  
         }
     }
 }

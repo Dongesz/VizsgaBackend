@@ -1,9 +1,10 @@
-﻿using AutoMapper;
-using BackEnd.Application.DTOs;
-using BackEnd.Domain.Models;
-using BackEnd.Infrastructure.Database;
+﻿using BackEnd.Application.DTOs;
+using BackEnd.Application.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace BackEnd.Api.Controllers
 {
@@ -11,99 +12,117 @@ namespace BackEnd.Api.Controllers
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
-        private readonly DatabaseContext _context;
-        private readonly IMapper _mapper;
-        public UsersController(DatabaseContext context, IMapper mapper)
+        private readonly IUsersService _service;
+        private readonly ILogger<UsersController> _logger;
+
+        public UsersController(IUsersService service, ILogger<UsersController> logger)
         {
-            _context = context;
-            _mapper = mapper;
+            _service = service;
+            _logger = logger;
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
             try
             {
-                var user = _context.Users.ToList();
-                var userDto = _mapper.Map<List<UsersGetDto>>(user);
-                return Ok(userDto);
+                var list = await _service.GetAllAsync(cancellationToken);
+                return Ok(list);
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.LogInformation("GetAll users cancelled.");
+                return BadRequest("Request cancelled.");
             }
             catch (Exception ex)
             {
-
-                return Problem(ex.Message);
+                _logger.LogError(ex, "GetAll users failed.");
+                return Problem(detail: ex.Message);
             }
         }
 
-        [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
         {
             try
             {
-                var user = _context.Users.Find(id);
-                var userDto = _mapper.Map<UsersGetDto>(user);
-                return Ok(userDto);
+                var item = await _service.GetByIdAsync(id, cancellationToken);
+                if (item == null) return NotFound();
+                return Ok(item);
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.LogInformation("GetById users cancelled.");
+                return BadRequest("Request cancelled.");
             }
             catch (Exception ex)
             {
-
-                return Problem(ex.Message);
+                _logger.LogError(ex, "GetById {Id} failed", id);
+                return Problem(detail: ex.Message);
             }
         }
 
         [HttpPost]
-        public IActionResult Create(User user)
+        public async Task<IActionResult> Create([FromBody] UsersSendDto dto, CancellationToken cancellationToken)
         {
             try
             {
-                _context.Users.Add(user);
-                _context.SaveChanges();
-                var userDto = _mapper.Map<UsersSendDto>(user);
-                return CreatedAtAction(nameof(GetById), new { id = user.Id }, userDto);
+                if (dto == null) return BadRequest("Body is null");
+                var created = await _service.CreateAsync(dto, cancellationToken);
+                return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.LogInformation("Create user cancelled.");
+                return BadRequest("Request cancelled.");
             }
             catch (Exception ex)
             {
-                return Problem(ex.Message);
-            }            
+                _logger.LogError(ex, "Create user failed.");
+                return Problem(detail: ex.Message);
+            }
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Update(int id, User user)
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> Update(int id, [FromBody] UsersSendDto dto, CancellationToken cancellationToken)
         {
             try
             {
-                _context.Entry(user).State = EntityState.Modified;
-                _context.SaveChanges();
-                var userDto = _mapper.Map<UsersSendDto>(user);
+                if (dto == null) return BadRequest("Body is null");
+                var ok = await _service.UpdateAsync(id, dto, cancellationToken);
+                if (!ok) return NotFound();
                 return NoContent();
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.LogInformation("Update user cancelled.");
+                return BadRequest("Request cancelled.");
             }
             catch (Exception ex)
             {
-
-                return Problem(ex.Message);
+                _logger.LogError(ex, "Update {Id} failed", id);
+                return Problem(detail: ex.Message);
             }
-            
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
         {
             try
             {
-                var user = _context.Users.Find(id);
-
-                var scores = _context.Scoreboards.Where(s => s.UserId == id);
-                _context.Scoreboards.RemoveRange(scores);
-
-                _context.Users.Remove(user);
-                _context.SaveChanges();
-                var userDto = _mapper.Map<UsersSendDto>(user);
+                var ok = await _service.DeleteAsync(id, cancellationToken);
+                if (!ok) return NotFound();
                 return NoContent();
-
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.LogInformation("Delete user cancelled.");
+                return BadRequest("Request cancelled.");
             }
             catch (Exception ex)
             {
-                return Problem(ex.Message);
+                _logger.LogError(ex, "Delete {Id} failed", id);
+                return Problem(detail: ex.Message);
             }
         }
     }

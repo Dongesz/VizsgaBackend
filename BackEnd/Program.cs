@@ -32,6 +32,8 @@ namespace BackEnd
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
             builder.Services.AddScoped<IScoreboardService, ScoreboardServices>();
+            builder.Services.AddScoped<IUsersService, UsersService>();
+
 
             var app = builder.Build();
 

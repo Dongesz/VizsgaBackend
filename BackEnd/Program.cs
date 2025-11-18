@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using BackEnd.Infrastructure.Database;
+using BackEnd.Application.Services;
+using BackEnd.Application.Mappers;
 
 namespace BackEnd
 {
@@ -9,7 +11,6 @@ namespace BackEnd
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // 1?? CORS hozzáadása
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll", policy =>
@@ -19,22 +20,21 @@ namespace BackEnd
                           .AllowAnyHeader();
                 });
             });
-            
+
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            // 2?? DB context regisztrálása (ez legyen itt!)
             var conn = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<DatabaseContext>(options =>
-            options.UseMySql(conn, ServerVersion.AutoDetect(conn)));
+                options.UseMySql(conn, ServerVersion.AutoDetect(conn)));
 
-            builder.Services.AddAutoMapper(typeof(BackEnd.Application.Mappers.AutoMapperProfile).Assembly);
+            builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
+            builder.Services.AddScoped<IScoreboardService, ScoreboardServices>();
 
             var app = builder.Build();
 
-            // 3?? CORS engedélyezése
             app.UseCors("AllowAll");
 
             if (app.Environment.IsDevelopment())
@@ -46,7 +46,8 @@ namespace BackEnd
             app.UseHttpsRedirection();
             app.UseAuthorization();
             app.MapControllers();
-            app.Run(); ;
+
+            app.Run();
         }
     }
 }

@@ -9,76 +9,31 @@ namespace BackEnd.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ScoreboardController : ControllerBase
+    public class ScoreboardController : ControllerBase, IScoreboardController
     {
-        private readonly DatabaseContext _context; // referencia a contexthez
-        private readonly IMapper _mapper; // referencia az AutoMapperre
-        
-        public ScoreboardController(DatabaseContext context, IMapper mapper)
+        public Task<ScoreboardGetDto> CreateAsync(ScoreboardSendDto dto, CancellationToken cancellationToken = default)
         {
-            _context = context;
-            _mapper = mapper;
-        }
-
-        [HttpGet]
-        public IActionResult GetAll()
-        {
-            try
-            {
-                var scoreboard = _context.Scoreboards.ToList();
-                var scoredto = _mapper.Map<List<ScoreboardGetDto>>(scoreboard);
-
-                return Ok(scoredto);
-            }
-            catch (Exception ex)
-            {
-
-                return Problem(ex.Message);
-            }
             
         }
 
-        [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
-            try
-            {
-                var scoreboard = _context.Scoreboards.Find(id);
-                var scoredto = _mapper.Map<List<ScoreboardGetDto>>(scoreboard);
-                return Ok(scoredto);
-            }
-            catch (Exception ex)
-            {
-
-                return Problem(ex.Message);
-            }
+            throw new NotImplementedException();
         }
 
-        [HttpPost]
-        public IActionResult Create(Scoreboard scoreboard)
+        public Task<IEnumerable<ScoreboardGetDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            _context.Scoreboards.Add(scoreboard);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(GetById), new { id = scoreboard.UserId }, scoreboard);
+            throw new NotImplementedException();
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Update(int id,Scoreboard scoreboard)
+        public Task<ScoreboardGetDto?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
-            _context.Entry(scoreboard).State = EntityState.Modified;
-            _context.SaveChanges();
-            return NoContent();
-
+            throw new NotImplementedException();
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public Task<bool> UpdateAsync(int id, ScoreboardSendDto dto, CancellationToken cancellationToken = default)
         {
-            var scoreboard = _context.Scoreboards.Find(id);
-            _context.Scoreboards.Remove(scoreboard);
-            _context.SaveChanges();
-            return NoContent();
+            throw new NotImplementedException();
         }
-
     }
 }

@@ -11,6 +11,7 @@ namespace BackEnd.Application.Mappers
             CreateMap<User, UsersGetDto>();
             CreateMap<User, UsersSendDto>();
             CreateMap<Scoreboard, ScoreboardGetDto>();
+            CreateMap<Scoreboard, ScoreboardSendDto>();
         }
     }
 }

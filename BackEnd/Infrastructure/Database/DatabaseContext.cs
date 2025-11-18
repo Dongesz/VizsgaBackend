@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using BackEnd.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql.Scaffolding.Internal;
 
-namespace BackEnd.Domain.Models;
+namespace BackEnd.Infrastructure.Database;
 
 public partial class DatabaseContext : DbContext
 {

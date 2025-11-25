@@ -11,25 +11,24 @@ public partial class DatabaseContext : DbContext
     public DatabaseContext()
     {
     }
-
-    public DatabaseContext(DbContextOptions<DatabaseContext> options)
-        : base(options)
+    public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
     {
     }
 
+    // Dbsetek - database tablak reprezentalasa
     public virtual DbSet<Scoreboard> Scoreboards { get; set; }
-
     public virtual DbSet<User> Users { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseMySql("server=s58.tarhely.com;port=3306;database=dongeszh_CastL;uid=dongeszh_dongesz;pwd=DorinaMate1;charset=utf8mb4;sslmode=None", ServerVersion.Parse("10.11.14-mariadb"));
 
+    // Ez a metodus leirja hogy milyen formaban forditsa majd sql codera az entitast az EF. Pl tablak felepitese, kapcsolatai, mezok nevei, tulajdonsagai stb.
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // Alapveto beallitasok pl.charset
         modelBuilder
             .UseCollation("utf8mb4_hungarian_ci")
             .HasCharSet("utf8mb4");
-
+        
+        // Adat tablak migraciojanak beallitasai
         modelBuilder.Entity<User>(b =>
         {
             b.ToTable("Users");
@@ -42,7 +41,6 @@ public partial class DatabaseContext : DbContext
             b.Property(u => u.CreatedAt).HasColumnName("CreatedAt");
             b.Property(u => u.UpdatedAt).HasColumnName("UpdatedAt");
         });
-
         modelBuilder.Entity<Scoreboard>(b =>
         {
             b.ToTable("Scoreboard");

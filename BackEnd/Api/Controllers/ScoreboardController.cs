@@ -8,19 +8,23 @@ using System.Threading.Tasks;
 
 namespace BackEnd.Api.Controllers
 {
+    // Controller reteg - itt jonnek letre a tenyleges vegpontok, a muveletek a service retegbol kerulnek ki.
     [ApiController]
     [Route("api/[controller]")]
     public class ScoreboardController : ControllerBase
     {
+        // Mezok a DI hez
         private readonly IScoreboardService _service;
         private readonly ILogger<ScoreboardController> _logger;
 
+        // DI beallitasa a konstruktorban
         public ScoreboardController(IScoreboardService service, ILogger<ScoreboardController> logger)
         {
             _service = service;
             _logger = logger;
         }
 
+        // A controller metodusok meghivjak a hozzajuk tartozo service metodust, majd hibakezelessel kievgeszitve vegpontot keszitenek belole
         [HttpGet]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
@@ -116,7 +120,7 @@ namespace BackEnd.Api.Controllers
             }
             catch (OperationCanceledException)
             {
-                _logger.LogInformation("Delete was cancelled.");
+                _logger.LogInformation("Delete   was cancelled.");
                 return BadRequest("Request cancelled.");
             }
             catch (Exception ex)

@@ -10,7 +10,8 @@ namespace BackEnd
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            
+            // Allow all cors, fejleszteshez megfelel, deployra javitani!
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll", policy =>
@@ -25,18 +26,22 @@ namespace BackEnd
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            // Conn string lekerese, Dbcontext - Database kapcsolat felallitasa
             var conn = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<DatabaseContext>(options =>
                 options.UseMySql(conn, ServerVersion.AutoDetect(conn)));
 
+            // Seged osztalyok registralasa
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
+            // Interfacek registralasa (DI)
             builder.Services.AddScoped<IScoreboardService, ScoreboardServices>();
             builder.Services.AddScoped<IUsersService, UsersService>();
 
 
             var app = builder.Build();
 
+            // Cors aktivalasa
             app.UseCors("AllowAll");
 
             if (app.Environment.IsDevelopment())

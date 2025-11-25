@@ -5,6 +5,7 @@ using BackEnd.Application.DTOs;
 
 namespace BackEnd.Application.Services
 {
+    // Interface az adott model service retegenek implementalasara - hasznos teszteles, es atlathatosag szempontjabol is
     public interface IScoreboardService
     {
         Task<IEnumerable<ScoreboardGetDto>> GetAllAsync(CancellationToken cancellationToken = default);

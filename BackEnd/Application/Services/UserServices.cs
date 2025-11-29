@@ -94,5 +94,18 @@ namespace BackEnd.Application.Services
             await _context.SaveChangesAsync(cancellationToken);
             return true;
         }
+
+        public async Task<UserCountDto> GetUserCountAsync(CancellationToken cancellationToken = default)
+        {
+            var count = await _context.Users.CountAsync(cancellationToken);
+            var dto = new UserCountDto
+            {
+                PlayerCount = count
+            };
+
+            
+            return dto;
+
+        }
     }
 }

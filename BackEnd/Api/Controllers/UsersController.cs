@@ -125,5 +125,26 @@ namespace BackEnd.Api.Controllers
                 return Problem(detail: ex.Message);
             }
         }
+
+        [HttpGet("playerCount")]
+        public async Task<IActionResult> PlayerCount(CancellationToken cancellationToken)
+        {
+            try
+            {
+                var ok = await _service.GetUserCountAsync(cancellationToken);
+                return Ok(ok);
+
+            }
+            catch (OperationCanceledException) 
+            {
+                _logger.LogInformation("Delete user cancelled.");
+                return BadRequest("Request cancelled.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Player count error: {ex.InnerException.Message}");
+                return Problem(detail: ex.InnerException.Message);
+            }
+        }
     }
 }

@@ -40,35 +40,14 @@ namespace BackEnd.Application.Services
             return _mapper.Map<ScoreboardGetDto>(entity);
         }
 
-        public async Task<ScoreboardGetDto> CreateAsync(ScoreboardSendDto dto, CancellationToken cancellationToken = default)
-        {
-            var entity = _mapper.Map<Scoreboard>(dto);
-            entity.LastUpdated = System.DateTime.UtcNow; // LastUpdated mezo erteket Valos idore allitjuk hivaskor
-
-            await _context.Scoreboards.AddAsync(entity, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return _mapper.Map<ScoreboardGetDto>(entity);
-        }
-
         public async Task<bool> UpdateAsync(int id, ScoreboardSendDto dto, CancellationToken cancellationToken = default)
         {
             var existing = await _context.Scoreboards.FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
             if (existing == null) return false;
 
             _mapper.Map(dto, existing);
-            existing.LastUpdated = System.DateTime.UtcNow;
+            existing.LastUpdated = DateTime.UtcNow;
 
-            await _context.SaveChangesAsync(cancellationToken);
-            return true;
-        }
-
-        public async Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default)
-        {
-            var existing = await _context.Scoreboards.FindAsync(new object[] { id }, cancellationToken);
-            if (existing == null) return false;
-
-            _context.Scoreboards.Remove(existing);
             await _context.SaveChangesAsync(cancellationToken);
             return true;
         }

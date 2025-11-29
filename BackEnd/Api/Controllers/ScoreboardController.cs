@@ -66,27 +66,6 @@ namespace BackEnd.Api.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] ScoreboardSendDto dto, CancellationToken cancellationToken)
-        {
-            try
-            {
-                if (dto == null) return BadRequest("Body is null");
-                var created = await _service.CreateAsync(dto, cancellationToken);
-                return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
-            }
-            catch (OperationCanceledException)
-            {
-                _logger.LogInformation("Create was cancelled.");
-                return BadRequest("Request cancelled.");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Create failed");
-                return Problem(detail: ex.Message);
-            }
-        }
-
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id, [FromBody] ScoreboardSendDto dto, CancellationToken cancellationToken)
         {
@@ -105,27 +84,6 @@ namespace BackEnd.Api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Update {Id} failed", id);
-                return Problem(detail: ex.Message);
-            }
-        }
-
-        [HttpDelete("{id:int}")]
-        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
-        {
-            try
-            {
-                var ok = await _service.DeleteAsync(id, cancellationToken);
-                if (!ok) return NotFound();
-                return NoContent();
-            }
-            catch (OperationCanceledException)
-            {
-                _logger.LogInformation("Delete   was cancelled.");
-                return BadRequest("Request cancelled.");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Delete {Id} failed", id);
                 return Problem(detail: ex.Message);
             }
         }

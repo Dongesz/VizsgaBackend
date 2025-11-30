@@ -147,7 +147,7 @@ namespace BackEnd.Api.Controllers
             }
         }
 
-        [HttpGet("playerScore{id:int}")]
+        [HttpGet("playerScore/{id:int}")]
         public async Task<IActionResult> UserScoreboard(int id, CancellationToken cancellationToken)
         {
             try

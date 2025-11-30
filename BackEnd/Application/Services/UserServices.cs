@@ -126,5 +126,10 @@ namespace BackEnd.Application.Services
 
             return dto;
         }
+
+        public Task<UserScoreboardDto> UpdateUserPassword(int id, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

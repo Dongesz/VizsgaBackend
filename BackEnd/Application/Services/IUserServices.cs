@@ -13,5 +13,6 @@ namespace BackEnd.Application.Services
         Task<bool> UpdateAsync(int id, UsersSendDto dto, CancellationToken cancellationToken = default);
         Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default);
         Task<UserCountDto> GetUserCountAsync(CancellationToken cancellationToken = default);
+        Task<UserScoreboardDto> GetUserScoreboardAsync(int id, CancellationToken cancellationToken = default);     
     }
 }

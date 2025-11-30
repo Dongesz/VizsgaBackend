@@ -107,5 +107,24 @@ namespace BackEnd.Application.Services
             return dto;
 
         }
+
+        public async Task<UserScoreboardDto> GetUserScoreboardAsync(int id, CancellationToken cancellationToken = default)
+        {
+            var user = await _context.Users.FindAsync(id, cancellationToken);
+            var score = await _context.Scoreboards.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
+
+            if (user == null || score == null) return null;
+
+         
+            var dto = new UserScoreboardDto
+            {
+                Id = id,
+                Name = user.Name,
+                TotalScore = score.TotalScore,
+                TotalXp = score.TotalXp
+            };
+
+            return dto;
+        }
     }
 }

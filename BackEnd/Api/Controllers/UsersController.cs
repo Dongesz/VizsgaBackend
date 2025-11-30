@@ -135,14 +135,33 @@ namespace BackEnd.Api.Controllers
                 return Ok(ok);
 
             }
-            catch (OperationCanceledException) 
+            catch (OperationCanceledException)
             {
-                _logger.LogInformation("Delete user cancelled.");
+                _logger.LogInformation("Get PlayerCount cancelled.");
                 return BadRequest("Request cancelled.");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Player count error: {ex.InnerException.Message}");
+                return Problem(detail: ex.InnerException.Message);
+            }
+        }
+
+        [HttpGet("playerScore{id:int}")]
+        public async Task<IActionResult> UserScoreboard(int id, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var ok = await _service.GetUserScoreboardAsync(id, cancellationToken);
+                return Ok(ok);
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.LogInformation("Get Player-Score cancelled.");
+                return BadRequest("Request cancelled.");
+            }
+            catch (Exception ex)
+            {
                 return Problem(detail: ex.InnerException.Message);
             }
         }

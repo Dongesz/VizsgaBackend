@@ -23,7 +23,6 @@ namespace BackEnd.Application.Services
             _mapper = mapper;
             _logger = logger;
         }
-
         public async Task<IEnumerable<UsersGetDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             var users = await _context.Users
@@ -102,46 +101,40 @@ namespace BackEnd.Application.Services
             {
                 PlayerCount = count
             };
-
-            
             return dto;
-
         }
 
-        public async Task<UserByIdScoreboardDto> GetUserByIdScoreboardAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<UserScoreboardByIdDto> GetUserByIdScoreboardAsync(int id, CancellationToken cancellationToken = default)
         {
             var user = await _context.Users.FindAsync(id, cancellationToken);
             var score = await _context.Scoreboards.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
 
             if (user == null || score == null) return null;
 
-         
-            var dto = new UserByIdScoreboardDto
+            var dto = new UserScoreboardByIdDto
             {
                 Id = id,
                 Name = user.Name,
                 TotalScore = score.TotalScore,
                 TotalXp = score.TotalXp
             };
-
             return dto;
         }
 
-
-        public async Task<List<UserAllScoreboardDto>> GetAllUserScoreboardAsync(CancellationToken cancellationToken = default)
+        public async Task<List<UserScoreboardGetAllDto>> GetAllUserScoreboardAsync(CancellationToken cancellationToken = default)
         {
             var users = await _context.Users.ToListAsync(cancellationToken);
             var scores = await _context.Scoreboards.ToListAsync(cancellationToken);
 
             if (users == null || scores == null) return null;
 
-            var result = new List<UserAllScoreboardDto>();
+            var result = new List<UserScoreboardGetAllDto>();
             foreach (var item in users)
             {
                 var score = scores.Find(x => x.UserId == item.Id);
                 if (score == null) continue;
 
-                var dto = new UserAllScoreboardDto
+                var dto = new UserScoreboardGetAllDto
                 {
                     Name = item.Name,
                     TotalScore = score.TotalScore,
@@ -149,12 +142,10 @@ namespace BackEnd.Application.Services
                 };
                 result.Add(dto);
             }
-           
-
             return result;
         }
 
-        public Task<UserByIdScoreboardDto> UpdateUserPassword(int id, CancellationToken cancellationToken = default)
+        public Task<bool> UpdateUserPassword(int id, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

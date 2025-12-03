@@ -13,8 +13,8 @@ namespace BackEnd.Application.Services
         Task<bool> UpdateAsync(int id, UsersSendDto dto, CancellationToken cancellationToken = default);
         Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default);
         Task<UserCountDto> GetUserCountAsync(CancellationToken cancellationToken = default);
-        Task<UserByIdScoreboardDto> GetUserByIdScoreboardAsync(int id, CancellationToken cancellationToken = default);
-        Task<List<UserAllScoreboardDto>> GetAllUserScoreboardAsync(CancellationToken cancellationToken = default);     
-        Task<UserByIdScoreboardDto> UpdateUserPassword(int id, CancellationToken cancellationToken = default);     
+        Task<List<UserScoreboardGetAllDto>> GetAllUserScoreboardAsync(CancellationToken cancellationToken = default);
+        Task<UserScoreboardByIdDto> GetUserByIdScoreboardAsync(int id, CancellationToken cancellationToken = default);
+        Task<bool> UpdateUserPassword(int id, CancellationToken cancellationToken = default);     
     }
 }

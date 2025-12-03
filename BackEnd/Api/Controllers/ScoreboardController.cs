@@ -41,7 +41,7 @@ namespace BackEnd.Api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "GetAll failed");
-                return Problem(detail: ex.Message);
+                return Problem(detail: ex?.InnerException?.Message);
             }
         }
 
@@ -62,7 +62,7 @@ namespace BackEnd.Api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "GetById {Id} failed", id);
-                return Problem(detail: ex.Message);
+                return Problem(detail: ex?.InnerException?.Message);
             }
         }
 
@@ -84,7 +84,7 @@ namespace BackEnd.Api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Update {Id} failed", id);
-                return Problem(detail: ex.Message);
+                return Problem(detail: ex?.InnerException?.Message);
             }
         }
     }

@@ -19,7 +19,6 @@ public partial class DatabaseContext : DbContext
     public virtual DbSet<Scoreboard> Scoreboards { get; set; }
     public virtual DbSet<User> Users { get; set; }
 
-
     // Ez a metodus leirja hogy milyen formaban forditsa majd sql codera az entitast az EF. Pl tablak felepitese, kapcsolatai, mezok nevei, tulajdonsagai stb.
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -57,6 +56,5 @@ public partial class DatabaseContext : DbContext
 
         OnModelCreatingPartial(modelBuilder);
     }
-
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

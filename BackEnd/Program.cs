@@ -38,7 +38,6 @@ namespace BackEnd
             builder.Services.AddScoped<IScoreboardService, ScoreboardServices>();
             builder.Services.AddScoped<IUsersService, UsersService>();
 
-
             var app = builder.Build();
 
             // Cors aktivalasa

@@ -4,7 +4,7 @@
     public class ScoreboardSendDto
     {
         public int? TotalScore { get; set; }
-        public int? TotalXp { get; set; }
 
+        public int? TotalXp { get; set; }
     }
 }

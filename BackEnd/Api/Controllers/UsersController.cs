@@ -14,7 +14,6 @@ namespace BackEnd.Api.Controllers
     {
         private readonly IUsersService _service;
         private readonly ILogger<UsersController> _logger;
-
         public UsersController(IUsersService service, ILogger<UsersController> logger)
         {
             _service = service;
@@ -37,7 +36,7 @@ namespace BackEnd.Api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "GetAll users failed.");
-                return Problem(detail: ex.Message);
+                return Problem(detail: ex?.InnerException?.Message);
             }
         }
 
@@ -58,7 +57,7 @@ namespace BackEnd.Api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "GetById {Id} failed", id);
-                return Problem(detail: ex.Message);
+                return Problem(detail: ex?.InnerException?.Message);
             }
         }
 
@@ -79,7 +78,7 @@ namespace BackEnd.Api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Create user failed.");
-                return Problem(detail: ex.Message);
+                return Problem(detail: ex?.InnerException?.Message);
             }
         }
 
@@ -101,7 +100,7 @@ namespace BackEnd.Api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Update {Id} failed", id);
-                return Problem(detail: ex.Message);
+                return Problem(detail: ex?.InnerException?.Message);
             }
         }
 
@@ -122,7 +121,7 @@ namespace BackEnd.Api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Delete {Id} failed", id);
-                return Problem(detail: ex.Message);
+                return Problem(detail: ex?.InnerException?.Message);
             }
         }
 
@@ -132,6 +131,7 @@ namespace BackEnd.Api.Controllers
             try
             {
                 var ok = await _service.GetUserCountAsync(cancellationToken);
+                if (ok == null) return NotFound();
                 return Ok(ok);
 
             }
@@ -142,8 +142,29 @@ namespace BackEnd.Api.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Player count error: {ex.InnerException.Message}");
-                return Problem(detail: ex.InnerException.Message);
+                _logger.LogError(ex, $"Player count error: {ex?.InnerException?.Message}");
+                return Problem(detail: ex?.InnerException?.Message);
+            }
+        }
+
+        [HttpGet("playerScore")]
+        public async Task<IActionResult> UserScoreboardAll(CancellationToken cancellationToken)
+        {
+            try
+            {
+                var ok = await _service.GetAllUserScoreboardAsync(cancellationToken);
+                if (ok == null) return NotFound();
+                return Ok(ok);
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.LogInformation("Get Player-Score cancelled.");
+                return BadRequest("Request cancelled.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"All Player Score by error: {ex?.InnerException?.Message}");
+                return Problem(detail: ex?.InnerException?.Message);
             }
         }
 
@@ -153,6 +174,7 @@ namespace BackEnd.Api.Controllers
             try
             {
                 var ok = await _service.GetUserByIdScoreboardAsync(id, cancellationToken);
+                if (ok == null) return NotFound();
                 return Ok(ok);
             }
             catch (OperationCanceledException)
@@ -162,25 +184,8 @@ namespace BackEnd.Api.Controllers
             }
             catch (Exception ex)
             {
-                return Problem(detail: ex.InnerException.Message);
-            }
-        }
-        [HttpGet("playerScore")]
-        public async Task<IActionResult> UserScoreboardAll(CancellationToken cancellationToken)
-        {
-            try
-            {
-                var ok = await _service.GetAllUserScoreboardAsync(cancellationToken);
-                return Ok(ok);
-            }
-            catch (OperationCanceledException)
-            {
-                _logger.LogInformation("Get Player-Score cancelled.");
-                return BadRequest("Request cancelled.");
-            }
-            catch (Exception ex)
-            {
-                return Problem(detail: ex.InnerException.Message);
+                _logger.LogError(ex, $"Player Score by id error: {ex?.InnerException?.Message}");
+                return Problem(detail: ex?.InnerException?.Message);
             }
         }
     }

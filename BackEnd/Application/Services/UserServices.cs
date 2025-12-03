@@ -3,6 +3,7 @@ using BackEnd.Application.DTOs;
 using BackEnd.Domain.Models;
 using BackEnd.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
+using BCrypt.Net;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -49,6 +50,7 @@ namespace BackEnd.Application.Services
             var entity = _mapper.Map<User>(dto);
             entity.CreatedAt = DateTime.UtcNow;
             entity.UpdatedAt = DateTime.UtcNow;
+            entity.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto?.Password);
 
             await _context.Users.AddAsync(entity, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
@@ -75,6 +77,7 @@ namespace BackEnd.Application.Services
 
             _mapper.Map(dto, existing);
             existing.UpdatedAt = DateTime.UtcNow;
+            existing.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto?.Password);
 
             await _context.SaveChangesAsync(cancellationToken);
             return true;

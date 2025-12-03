@@ -108,7 +108,7 @@ namespace BackEnd.Application.Services
 
         }
 
-        public async Task<UserScoreboardDto> GetUserScoreboardAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<UserByIdScoreboardDto> GetUserByIdScoreboardAsync(int id, CancellationToken cancellationToken = default)
         {
             var user = await _context.Users.FindAsync(id, cancellationToken);
             var score = await _context.Scoreboards.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
@@ -116,7 +116,7 @@ namespace BackEnd.Application.Services
             if (user == null || score == null) return null;
 
          
-            var dto = new UserScoreboardDto
+            var dto = new UserByIdScoreboardDto
             {
                 Id = id,
                 Name = user.Name,
@@ -127,7 +127,34 @@ namespace BackEnd.Application.Services
             return dto;
         }
 
-        public Task<UserScoreboardDto> UpdateUserPassword(int id, CancellationToken cancellationToken = default)
+
+        public async Task<List<UserAllScoreboardDto>> GetAllUserScoreboardAsync(CancellationToken cancellationToken = default)
+        {
+            var users = await _context.Users.ToListAsync(cancellationToken);
+            var scores = await _context.Scoreboards.ToListAsync(cancellationToken);
+
+            if (users == null || scores == null) return null;
+
+            var result = new List<UserAllScoreboardDto>();
+            foreach (var item in users)
+            {
+                var score = scores.Find(x => x.UserId == item.Id);
+                if (score == null) continue;
+
+                var dto = new UserAllScoreboardDto
+                {
+                    Name = item.Name,
+                    TotalScore = score.TotalScore,
+                    TotalXp = score.TotalXp
+                };
+                result.Add(dto);
+            }
+           
+
+            return result;
+        }
+
+        public Task<UserByIdScoreboardDto> UpdateUserPassword(int id, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

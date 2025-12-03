@@ -148,11 +148,29 @@ namespace BackEnd.Api.Controllers
         }
 
         [HttpGet("playerScore/{id:int}")]
-        public async Task<IActionResult> UserScoreboard(int id, CancellationToken cancellationToken)
+        public async Task<IActionResult> UserScoreboardById(int id, CancellationToken cancellationToken)
         {
             try
             {
-                var ok = await _service.GetUserScoreboardAsync(id, cancellationToken);
+                var ok = await _service.GetUserByIdScoreboardAsync(id, cancellationToken);
+                return Ok(ok);
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.LogInformation("Get Player-Score cancelled.");
+                return BadRequest("Request cancelled.");
+            }
+            catch (Exception ex)
+            {
+                return Problem(detail: ex.InnerException.Message);
+            }
+        }
+        [HttpGet("playerScore")]
+        public async Task<IActionResult> UserScoreboardAll(CancellationToken cancellationToken)
+        {
+            try
+            {
+                var ok = await _service.GetAllUserScoreboardAsync(cancellationToken);
                 return Ok(ok);
             }
             catch (OperationCanceledException)

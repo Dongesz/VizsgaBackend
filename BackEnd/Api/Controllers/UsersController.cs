@@ -188,5 +188,26 @@ namespace BackEnd.Api.Controllers
                 return Problem(detail: ex?.InnerException?.Message);
             }
         }
+        
+        [HttpPut("playerPasswordUpdate")]
+        public async Task<IActionResult> UserPasswordUpdateById(UserPasswordUpdateDto dto, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var ok = await _service.UpdateUserPassword(dto, cancellationToken);
+                if (!ok) return NotFound();
+                return Ok(ok);
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.LogInformation("Player password update cancelled.");
+                return BadRequest("Request cancelled.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Player password update by id error: {ex?.InnerException?.Message}");
+                return Problem(detail: ex?.InnerException?.Message);
+            }
+        }
     }
 }

@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Diagnostics.Contracts;
 
 namespace BackEnd.Application.Services
 {
@@ -148,9 +149,18 @@ namespace BackEnd.Application.Services
             return result;
         }
 
-        public Task<bool> UpdateUserPassword(int id, CancellationToken cancellationToken = default)
+        public async Task<bool> UpdateUserPassword(UserPasswordUpdateDto dto, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == dto.Email, cancellationToken);
+            if (user == null) return false;
+            var verify = BCrypt.Net.BCrypt.Verify(dto.OldPassword,user.PasswordHash);
+            if (verify)
+            {
+                user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+                await _context.SaveChangesAsync(cancellationToken);
+                return true;
+            }
+            else return false;
         }
     }
 }

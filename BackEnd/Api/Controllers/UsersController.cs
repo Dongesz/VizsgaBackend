@@ -194,7 +194,7 @@ namespace BackEnd.Api.Controllers
         {
             try
             {
-                var ok = await _service.UpdateUserPassword(dto, cancellationToken);
+                var ok = await _service.UpdateUserPasswordAsync(dto, cancellationToken);
                 if (!ok) return NotFound();
                 return Ok(ok);
             }
@@ -206,6 +206,27 @@ namespace BackEnd.Api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Player password update by id error: {ex?.InnerException?.Message}");
+                return Problem(detail: ex?.InnerException?.Message);
+            }
+        }
+
+        [HttpPut("playerResult")]
+        public async Task<IActionResult> UserResultGetAll(int id, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var ok = await _service.GetAllResultAsync(id, cancellationToken);
+                if (ok == null) return NotFound();
+                return Ok(ok);
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.LogInformation("Get Player-Result cancelled.");
+                return BadRequest("Request cancelled.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Player-Result get all: {ex?.InnerException?.Message}");
                 return Problem(detail: ex?.InnerException?.Message);
             }
         }

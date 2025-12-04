@@ -110,7 +110,7 @@ namespace BackEnd.Application.Services
 
         public async Task<UserScoreboardByIdDto> GetUserByIdScoreboardAsync(int id, CancellationToken cancellationToken = default)
         {
-            var user = await _context.Users.FindAsync(id, cancellationToken);
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
             var score = await _context.Scoreboards.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
 
             if (user == null || score == null) return null;
@@ -149,7 +149,7 @@ namespace BackEnd.Application.Services
             return result;
         }
 
-        public async Task<bool> UpdateUserPassword(UserPasswordUpdateDto dto, CancellationToken cancellationToken = default)
+        public async Task<bool> UpdateUserPasswordAsync(UserPasswordUpdateDto dto, CancellationToken cancellationToken = default)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == dto.Email, cancellationToken);
             if (user == null) return false;
@@ -163,9 +163,23 @@ namespace BackEnd.Application.Services
             else return false;
         }
 
-        public Task<bool> GetAllResult(int id, CancellationToken cancellationToken = default)
+        public async Task<UserResultGetAllDto> GetAllResultAsync(int id, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            var score = await _context.Scoreboards.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
+
+            if (user == null || score == null) return null;
+
+            var dto = new UserResultGetAllDto
+            {
+                Id = id,
+                Name = user.Name,
+                Email = user.Email,
+                TotalScore = score.TotalScore,
+                TotalXp = score.TotalXp
+            };
+
+            return dto;
         }
     }
 }

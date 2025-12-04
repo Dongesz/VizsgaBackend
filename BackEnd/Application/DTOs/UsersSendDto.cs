@@ -1,4 +1,6 @@
-﻿namespace BackEnd.Application.DTOs
+﻿using System.Text.Json.Serialization;
+
+namespace BackEnd.Application.DTOs
 {
     public class UsersSendDto
     {
@@ -8,6 +10,7 @@
 
         public string? Password { get; set; } = null!;
 
-        public string UserType { get; set; } = null!;
+        [JsonIgnore]
+        public string UserType { get; set; } = "player";
     }
 }

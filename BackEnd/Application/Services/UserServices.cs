@@ -162,5 +162,10 @@ namespace BackEnd.Application.Services
             }
             else return false;
         }
+
+        public Task<bool> GetAllResult(int id, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

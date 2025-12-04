@@ -9,6 +9,5 @@
 
         public int? TotalXp { get; set; }
 
-        public DateTime? LastUpdated { get; set; }
     }
 }

@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Diagnostics.Contracts;
+using System.Security.Cryptography.Xml;
+using Microsoft.AspNetCore.Connections;
 
 namespace BackEnd.Application.Services
 {
@@ -25,6 +27,7 @@ namespace BackEnd.Application.Services
             _mapper = mapper;
             _logger = logger;
         }
+
         public async Task<IEnumerable<UsersGetDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             var users = await _context.Users
@@ -155,7 +158,7 @@ namespace BackEnd.Application.Services
 
             if (user == null) return new ResponseOutputDto { Message = "No user exist with that email adress!", Success = false };
             else if (dto.OldPassword == dto.NewPassword) return new ResponseOutputDto { Message = "Old and new password must be differnt!", Success = false };
-            
+
             var verify = BCrypt.Net.BCrypt.Verify(dto.OldPassword, user.PasswordHash);
             if (verify)
             {
@@ -187,7 +190,23 @@ namespace BackEnd.Application.Services
 
         public async Task<ResponseOutputDto> VerifyPasswordAsync(UserPasswordVerifyInputDto dto, CancellationToken cancellationToken = default)
         {
-            return null;
+            var name = await _context.Users.FirstOrDefaultAsync(x => x.Name == dto.Name, cancellationToken);
+            var email = await _context.Users.FirstOrDefaultAsync(x => x.Email == dto.Email, cancellationToken);
+
+            if(name == null && email == null) return new ResponseOutputDto { Message = "Incorrect name or email address!", Success = false };
+
+            if (name != null)
+            {
+                var verify = BCrypt.Net.BCrypt.Verify(dto.Password, name.PasswordHash);
+                if (verify) return new ResponseOutputDto { Message = "Successfull login!" ,Success = true };
+            }
+            else if (email != null)
+            {
+                var verify = BCrypt.Net.BCrypt.Verify(dto.Password, email.PasswordHash);
+                if (verify)
+                    return new ResponseOutputDto { Message = "Successfull login!", Success = true };
+            }
+            return new ResponseOutputDto { Message = "Incorrect password!" ,Success = false };
         }
     }
 }

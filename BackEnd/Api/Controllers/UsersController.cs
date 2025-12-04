@@ -225,7 +225,28 @@ namespace BackEnd.Api.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Player-Result get all: {ex?.InnerException?.Message}");
+                _logger.LogError(ex, $"Player-Result get all error: {ex?.InnerException?.Message}");
+                return Problem(detail: ex?.InnerException?.Message);
+            }
+        }
+
+        [HttpPost("playerPasswordVerify")]
+        public async Task<IActionResult> UserPasswordVerify(UserPasswordVerifyInputDto dto, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var ok = await _service.VerifyPasswordAsync(dto, cancellationToken);
+                if (ok == null) return NotFound();
+                return Ok(ok);
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.LogInformation("Player-Password-Verify cancelled.");
+                return BadRequest("Request cancelled.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Player-Password-Verify error: {ex?.InnerException?.Message}");
                 return Problem(detail: ex?.InnerException?.Message);
             }
         }

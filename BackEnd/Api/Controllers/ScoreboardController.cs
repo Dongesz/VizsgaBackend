@@ -30,8 +30,8 @@ namespace BackEnd.Api.Controllers
         {
             try
             {
-                var list = await _service.GetAllAsync(cancellationToken);
-                return Ok(list);
+                var ok = await _service.GetAllAsync(cancellationToken);
+                return Ok(ok);
             }
             catch (OperationCanceledException)
             {
@@ -50,9 +50,8 @@ namespace BackEnd.Api.Controllers
         {
             try
             {
-                var item = await _service.GetByIdAsync(id, cancellationToken);
-                if (item == null) return NotFound();
-                return Ok(item);
+                var ok = await _service.GetByIdAsync(id, cancellationToken);
+                return Ok(ok);
             }
             catch (OperationCanceledException)
             {
@@ -71,10 +70,8 @@ namespace BackEnd.Api.Controllers
         {
             try
             {
-                if (dto == null) return BadRequest("Body is null");
                 var ok = await _service.UpdateAsync(id, dto, cancellationToken);
-                if (!ok) return NotFound();
-                return NoContent();
+                return Ok(ok);
             }
             catch (OperationCanceledException)
             {

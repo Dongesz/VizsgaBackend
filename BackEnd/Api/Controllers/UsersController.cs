@@ -25,8 +25,8 @@ namespace BackEnd.Api.Controllers
         {
             try
             {
-                var list = await _service.GetAllAsync(cancellationToken);
-                return Ok(list);
+                var ok = await _service.GetAllAsync(cancellationToken);
+                return Ok(ok);
             }
             catch (OperationCanceledException)
             {
@@ -45,9 +45,8 @@ namespace BackEnd.Api.Controllers
         {
             try
             {
-                var item = await _service.GetByIdAsync(id, cancellationToken);
-                if (item == null) return NotFound();
-                return Ok(item);
+                var ok = await _service.GetByIdAsync(id, cancellationToken);
+                return Ok(ok);
             }
             catch (OperationCanceledException)
             {
@@ -66,9 +65,8 @@ namespace BackEnd.Api.Controllers
         {
             try
             {
-                if (dto == null) return BadRequest("Body is null");
-                var created = await _service.CreateAsync(dto, cancellationToken);
-                return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+                var ok = await _service.CreateAsync(dto, cancellationToken);
+                return Ok(ok);
             }
             catch (OperationCanceledException)
             {
@@ -87,10 +85,8 @@ namespace BackEnd.Api.Controllers
         {
             try
             {
-                if (dto == null) return BadRequest("Body is null");
                 var ok = await _service.UpdateAsync(id, dto, cancellationToken);
-                if (!ok) return NotFound();
-                return NoContent();
+                return Ok(ok);
             }
             catch (OperationCanceledException)
             {
@@ -110,8 +106,7 @@ namespace BackEnd.Api.Controllers
             try
             {
                 var ok = await _service.DeleteAsync(id, cancellationToken);
-                if (!ok) return NotFound();
-                return NoContent();
+                return Ok(ok);
             }
             catch (OperationCanceledException)
             {
@@ -131,7 +126,6 @@ namespace BackEnd.Api.Controllers
             try
             {
                 var ok = await _service.GetUserCountAsync(cancellationToken);
-                if (ok == null) return NotFound();
                 return Ok(ok);
 
             }
@@ -153,7 +147,6 @@ namespace BackEnd.Api.Controllers
             try
             {
                 var ok = await _service.GetAllUserScoreboardAsync(cancellationToken);
-                if (ok == null) return NotFound();
                 return Ok(ok);
             }
             catch (OperationCanceledException)
@@ -174,7 +167,6 @@ namespace BackEnd.Api.Controllers
             try
             {
                 var ok = await _service.GetUserByIdScoreboardAsync(id, cancellationToken);
-                if (ok == null) return NotFound();
                 return Ok(ok);
             }
             catch (OperationCanceledException)
@@ -215,7 +207,6 @@ namespace BackEnd.Api.Controllers
             try
             {
                 var ok = await _service.GetAllResultAsync(id, cancellationToken);
-                if (ok == null) return NotFound();
                 return Ok(ok);
             }
             catch (OperationCanceledException)
@@ -236,7 +227,6 @@ namespace BackEnd.Api.Controllers
             try
             {
                 var ok = await _service.VerifyPasswordAsync(dto, cancellationToken);
-                if (ok == null) return NotFound();
                 return Ok(ok);
             }
             catch (OperationCanceledException)

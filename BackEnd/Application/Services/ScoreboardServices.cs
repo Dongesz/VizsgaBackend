@@ -23,33 +23,29 @@ namespace BackEnd.Application.Services
         }
 
         // Async muveletek kulonbozo celu vegpontokhoz cancellation tokennel egyut
-        public async Task<IEnumerable<ScoreboardGetDto>> GetAllAsync(CancellationToken cancellationToken = default)
+        public async Task<ResponseOutputDto> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            var list = await _context.Scoreboards
-                                     .AsNoTracking() // Csak olvasunk, nem modositunk, ez gyorsabb mukodeshez vezet
-                                     .ToListAsync(cancellationToken);
-            return _mapper.Map<List<ScoreboardGetDto>>(list);
+            var score = await _context.Scoreboards.ToListAsync(cancellationToken);
+            if (score == null) return new ResponseOutputDto { Message = "Scores not found!", Success = false};
+            return new ResponseOutputDto { Message = "Successful fetch!", Success = true, Result = _mapper.Map<List<ScoreboardGetDto>>(score) }; 
         }
 
-        public async Task<ScoreboardGetDto?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<ResponseOutputDto?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
-            var entity = await _context.Scoreboards
-                                       .AsNoTracking()
-                                       .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
-            if (entity == null) return null;
-            return _mapper.Map<ScoreboardGetDto>(entity);
+            var score = await _context.Scoreboards.FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+            if (score == null) return new ResponseOutputDto { Message = "Score not found!", Success = false };
+            return new ResponseOutputDto { Message = "Successful fetch!", Success = true, Result = _mapper.Map<ScoreboardGetDto>(score) };
         }
 
-        public async Task<bool> UpdateAsync(int id, ScoreboardSendDto dto, CancellationToken cancellationToken = default)
+        public async Task<ResponseOutputDto> UpdateAsync(int id, ScoreboardSendDto dto, CancellationToken cancellationToken = default)
         {
-            var existing = await _context.Scoreboards.FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
-            if (existing == null) return false;
-
-            _mapper.Map(dto, existing);
-            existing.LastUpdated = DateTime.UtcNow;
+            var score = await _context.Scoreboards.FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+            if (score == null) return new ResponseOutputDto { Message = "Score not found!", Success = false };
+            _mapper.Map(dto, score);
+            score.LastUpdated = DateTime.UtcNow;
 
             await _context.SaveChangesAsync(cancellationToken);
-            return true;
+            return new ResponseOutputDto { Message = "Score updated successfully!", Success = true};
         }
     }
 }

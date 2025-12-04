@@ -7,16 +7,16 @@ namespace BackEnd.Application.Services
 {
     public interface IUsersService
     {
-        Task<IEnumerable<UsersGetDto>> GetAllAsync(CancellationToken cancellationToken = default);
-        Task<UsersGetDto?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
-        Task<UsersGetDto> CreateAsync(UsersSendDto dto, CancellationToken cancellationToken = default);
-        Task<bool> UpdateAsync(int id, UsersSendDto dto, CancellationToken cancellationToken = default);
-        Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default);
-        Task<UserCountDto> GetUserCountAsync(CancellationToken cancellationToken = default);
-        Task<List<UserScoreboardGetAllDto>> GetAllUserScoreboardAsync(CancellationToken cancellationToken = default);
-        Task<UserScoreboardByIdDto> GetUserByIdScoreboardAsync(int id, CancellationToken cancellationToken = default);
+        Task<ResponseOutputDto> GetAllAsync(CancellationToken cancellationToken = default);
+        Task<ResponseOutputDto> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+        Task<ResponseOutputDto> CreateAsync(UsersSendDto dto, CancellationToken cancellationToken = default);
+        Task<ResponseOutputDto> UpdateAsync(int id, UsersSendDto dto, CancellationToken cancellationToken = default);
+        Task<ResponseOutputDto> DeleteAsync(int id, CancellationToken cancellationToken = default);
+        Task<ResponseOutputDto> GetUserCountAsync(CancellationToken cancellationToken = default);
+        Task<ResponseOutputDto> GetAllUserScoreboardAsync(CancellationToken cancellationToken = default);
+        Task<ResponseOutputDto> GetUserByIdScoreboardAsync(int id, CancellationToken cancellationToken = default);
         Task<ResponseOutputDto> UpdateUserPasswordAsync(UserPasswordUpdateInputDto dto, CancellationToken cancellationToken = default);   
-        Task<UserResultGetAllDto> GetAllResultAsync(int id, CancellationToken cancellationToken = default);
+        Task<ResponseOutputDto> GetAllResultAsync(int id, CancellationToken cancellationToken = default);
         Task<ResponseOutputDto> VerifyPasswordAsync(UserPasswordVerifyInputDto dto, CancellationToken cancellationToken = default);
     }
 }

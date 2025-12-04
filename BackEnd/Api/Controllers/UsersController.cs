@@ -195,7 +195,6 @@ namespace BackEnd.Api.Controllers
             try
             {
                 var ok = await _service.UpdateUserPasswordAsync(dto, cancellationToken);
-                if (!ok) return NotFound();
                 return Ok(ok);
             }
             catch (OperationCanceledException)

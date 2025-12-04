@@ -149,18 +149,20 @@ namespace BackEnd.Application.Services
             return result;
         }
 
-        public async Task<bool> UpdateUserPasswordAsync(UserPasswordUpdateDto dto, CancellationToken cancellationToken = default)
+        public async Task<string> UpdateUserPasswordAsync(UserPasswordUpdateDto dto, CancellationToken cancellationToken = default)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == dto.Email, cancellationToken);
-            if (user == null) return false;
-            var verify = BCrypt.Net.BCrypt.Verify(dto.OldPassword,user.PasswordHash);
+
+            if (user == null) return "User doesnt exist";
+            else if (dto.OldPassword == dto.NewPassword) return "Old and new password cannot be the same!";
+                var verify = BCrypt.Net.BCrypt.Verify(dto.OldPassword, user.PasswordHash);
             if (verify)
             {
                 user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
                 await _context.SaveChangesAsync(cancellationToken);
-                return true;
+                return "Successfull change!";
             }
-            else return false;
+            else return "Verification denied, passwords doesn't match";
         }
 
         public async Task<UserResultGetAllDto> GetAllResultAsync(int id, CancellationToken cancellationToken = default)

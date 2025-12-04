@@ -210,7 +210,7 @@ namespace BackEnd.Api.Controllers
             }
         }
 
-        [HttpPut("playerResult")]
+        [HttpGet("playerResult")]
         public async Task<IActionResult> UserResultGetAll(int id, CancellationToken cancellationToken)
         {
             try

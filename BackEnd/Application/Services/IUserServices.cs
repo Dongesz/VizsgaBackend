@@ -15,7 +15,8 @@ namespace BackEnd.Application.Services
         Task<UserCountDto> GetUserCountAsync(CancellationToken cancellationToken = default);
         Task<List<UserScoreboardGetAllDto>> GetAllUserScoreboardAsync(CancellationToken cancellationToken = default);
         Task<UserScoreboardByIdDto> GetUserByIdScoreboardAsync(int id, CancellationToken cancellationToken = default);
-        Task<string> UpdateUserPasswordAsync(UserPasswordUpdateDto dto, CancellationToken cancellationToken = default);   
-        Task<UserResultGetAllDto> GetAllResultAsync(int id, CancellationToken cancellationToken = default);   
+        Task<ResponseOutputDto> UpdateUserPasswordAsync(UserPasswordUpdateInputDto dto, CancellationToken cancellationToken = default);   
+        Task<UserResultGetAllDto> GetAllResultAsync(int id, CancellationToken cancellationToken = default);
+        Task<ResponseOutputDto> VerifyPasswordAsync(UserPasswordVerifyInputDto dto, CancellationToken cancellationToken = default);
     }
 }

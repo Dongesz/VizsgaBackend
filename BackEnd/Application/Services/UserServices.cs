@@ -149,20 +149,21 @@ namespace BackEnd.Application.Services
             return result;
         }
 
-        public async Task<string> UpdateUserPasswordAsync(UserPasswordUpdateDto dto, CancellationToken cancellationToken = default)
+        public async Task<ResponseOutputDto> UpdateUserPasswordAsync(UserPasswordUpdateInputDto dto, CancellationToken cancellationToken = default)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == dto.Email, cancellationToken);
 
-            if (user == null) return "User doesnt exist";
-            else if (dto.OldPassword == dto.NewPassword) return "Old and new password cannot be the same!";
-                var verify = BCrypt.Net.BCrypt.Verify(dto.OldPassword, user.PasswordHash);
+            if (user == null) return new ResponseOutputDto { Message = "No user exist with that email adress!", Success = false };
+            else if (dto.OldPassword == dto.NewPassword) return new ResponseOutputDto { Message = "Old and new password must be differnt!", Success = false };
+            
+            var verify = BCrypt.Net.BCrypt.Verify(dto.OldPassword, user.PasswordHash);
             if (verify)
             {
                 user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
                 await _context.SaveChangesAsync(cancellationToken);
-                return "Successfull change!";
+                return new ResponseOutputDto { Message = "Password changed successfully", Success = true };
             }
-            else return "Verification denied, passwords doesn't match";
+            else return new ResponseOutputDto { Message = "User verification denied!", Success = false };
         }
 
         public async Task<UserResultGetAllDto> GetAllResultAsync(int id, CancellationToken cancellationToken = default)
@@ -182,6 +183,11 @@ namespace BackEnd.Application.Services
             };
 
             return dto;
+        }
+
+        public async Task<ResponseOutputDto> VerifyPasswordAsync(UserPasswordVerifyInputDto dto, CancellationToken cancellationToken = default)
+        {
+            return null;
         }
     }
 }

@@ -190,7 +190,7 @@ namespace BackEnd.Api.Controllers
         }
         
         [HttpPut("playerPasswordUpdate")]
-        public async Task<IActionResult> UserPasswordUpdateById(UserPasswordUpdateDto dto, CancellationToken cancellationToken)
+        public async Task<IActionResult> UserPasswordUpdateById(UserPasswordUpdateInputDto dto, CancellationToken cancellationToken)
         {
             try
             {

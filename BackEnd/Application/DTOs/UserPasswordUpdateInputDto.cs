@@ -1,6 +1,6 @@
 ﻿namespace BackEnd.Application.DTOs
 {
-    public class UserPasswordUpdateDto
+    public class UserPasswordUpdateInputDto
     {
         public string? Email { get; set; }
 

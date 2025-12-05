@@ -1,6 +1,6 @@
-﻿namespace BackEnd.Application.DTOs
+﻿namespace BackEnd.Application.DTOs.User
 {
-    public class UserResultGetAllDto
+    public class UserResultGetAllOutputDto
     {
         public int? Id;
         public string? Name { get; set; } = null!;

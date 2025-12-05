@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using BackEnd.Application.DTOs;
+using BackEnd.Application.DTOs.Scoreboard;
 
 namespace BackEnd.Application.Services
 {
@@ -10,6 +11,6 @@ namespace BackEnd.Application.Services
     {
         Task<ResponseOutputDto> GetAllAsync(CancellationToken cancellationToken = default);
         Task<ResponseOutputDto> GetByIdAsync(int id, CancellationToken cancellationToken = default);
-        Task<ResponseOutputDto> UpdateAsync(int id, ScoreboardSendDto dto, CancellationToken cancellationToken = default);
+        Task<ResponseOutputDto> UpdateAsync(int id, ScoreboardSendInputDto dto, CancellationToken cancellationToken = default);
     }
 }

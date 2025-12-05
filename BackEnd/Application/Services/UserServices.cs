@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Diagnostics.Contracts;
 using System.Security.Cryptography.Xml;
 using Microsoft.AspNetCore.Connections;
+using BackEnd.Application.DTOs.User;
 
 namespace BackEnd.Application.Services
 {
@@ -31,18 +32,16 @@ namespace BackEnd.Application.Services
             var users = await _context.Users.ToListAsync(cancellationToken);
             if (users == null) return new ResponseOutputDto { Message = "Users not found!", Success = false};
 
-            return new ResponseOutputDto { Message = "Successful fetch!", Success = true, Result = _mapper.Map<List<UsersGetDto>>(users) }; 
+            return new ResponseOutputDto { Message = "Successful fetch!", Success = true, Result = _mapper.Map<List<UsersGetOutputDto>>(users) }; 
         }
-
         public async Task<ResponseOutputDto> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
 
             if (user == null) return new ResponseOutputDto { Message = "User not found!", Success = false};
-            return  new ResponseOutputDto { Message = "Successful fetch!", Success = true, Result = _mapper.Map<UsersGetDto>(user) };  
+            return  new ResponseOutputDto { Message = "Successful fetch!", Success = true, Result = _mapper.Map<UsersGetOutputDto>(user) };  
         }
-
-        public async Task<ResponseOutputDto> CreateAsync(UsersSendDto dto, CancellationToken cancellationToken = default)
+        public async Task<ResponseOutputDto> CreateAsync(UsersSendInputDto dto, CancellationToken cancellationToken = default)
         {
             var userToAdd = _mapper.Map<User>(dto);
             userToAdd.CreatedAt = DateTime.UtcNow;
@@ -64,10 +63,9 @@ namespace BackEnd.Application.Services
 
             await _context.Entry(userToAdd).Reference(u => u.Scoreboard).LoadAsync(cancellationToken);
 
-            return new ResponseOutputDto { Message = "User created successfully!", Success = true, Result = _mapper.Map<UsersGetDto>(userToAdd) };
+            return new ResponseOutputDto { Message = "User created successfully!", Success = true, Result = _mapper.Map<UsersGetOutputDto>(userToAdd) };
         }
-
-        public async Task<ResponseOutputDto> UpdateAsync(int id, UsersSendDto dto, CancellationToken cancellationToken = default)
+        public async Task<ResponseOutputDto> UpdateAsync(int id, UsersSendInputDto dto, CancellationToken cancellationToken = default)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
             if (user == null) return new ResponseOutputDto { Message = "User not found!", Success = false };
@@ -79,7 +77,6 @@ namespace BackEnd.Application.Services
             await _context.SaveChangesAsync(cancellationToken);
             return new ResponseOutputDto { Message = "User updated successfully!", Success = true };
         }
-
         public async Task<ResponseOutputDto> DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
@@ -98,21 +95,20 @@ namespace BackEnd.Application.Services
         {
             int? count = await _context.Users.CountAsync(cancellationToken);
             if (count == null) return new ResponseOutputDto { Message = "Couldn't fetch player count!", Success = false};
-            var playerCount = new UserCountDto
+            var playerCount = new UserCountOutputDto
             {
                 PlayerCount = count
             };
             return new ResponseOutputDto { Message = "Successful fetch!", Success = true, Result = playerCount };
         }
-
-        public async Task<ResponseOutputDto> GetUserByIdScoreboardAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<ResponseOutputDto> GetByIdUserScoreboardAsync(int id, CancellationToken cancellationToken = default)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
             var score = await _context.Scoreboards.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
 
             if (user == null && score == null) return new ResponseOutputDto { Message = "User not found!", Success = false };
 
-            var userScoreboard = new UserScoreboardByIdDto
+            var userScoreboard = new UserScoreboardByIdOutputDto
             {
                 Id = id,
                 Name = user.Name,
@@ -121,7 +117,6 @@ namespace BackEnd.Application.Services
             };
             return new ResponseOutputDto { Message = "Succesful fetch!", Success = true, Result = userScoreboard};
         }
-
         public async Task<ResponseOutputDto> GetAllUserScoreboardAsync(CancellationToken cancellationToken = default)
         {
             var users = await _context.Users.ToListAsync(cancellationToken);
@@ -129,13 +124,13 @@ namespace BackEnd.Application.Services
 
             if (users == null && scores == null) return new ResponseOutputDto { Message = "User not found!", Success = false };
 
-            var userScoreboardList = new List<UserScoreboardGetAllDto>();
+            var userScoreboardList = new List<UserScoreboardGetOutputAllDto>();
             foreach (var item in users)
             {
                 var score = scores.Find(x => x.UserId == item.Id);
                 if (score == null) continue;
 
-                var userScoreboard = new UserScoreboardGetAllDto
+                var userScoreboard = new UserScoreboardGetOutputAllDto
                 {
                     Name = item.Name,
                     TotalScore = score.TotalScore,
@@ -144,6 +139,24 @@ namespace BackEnd.Application.Services
                 userScoreboardList.Add(userScoreboard);
             }
             return new ResponseOutputDto { Message = "Succesful fetch!", Success = true, Result = userScoreboardList };
+        }
+        public async Task<ResponseOutputDto> GetAllResultAsync(int id, CancellationToken cancellationToken = default)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            var score = await _context.Scoreboards.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
+
+            if (user == null && score == null) return new ResponseOutputDto { Message = "User not found!", Success = false };
+
+            var UserResult = new UserResultGetAllOutputDto
+            {
+                Id = id,
+                Name = user.Name,
+                Email = user.Email,
+                TotalScore = score.TotalScore,
+                TotalXp = score.TotalXp
+            };
+
+            return new ResponseOutputDto { Message = "Succesful fetch!", Success = true, Result = UserResult };
         }
 
         public async Task<ResponseOutputDto> UpdateUserPasswordAsync(UserPasswordUpdateInputDto dto, CancellationToken cancellationToken = default)
@@ -162,27 +175,18 @@ namespace BackEnd.Application.Services
             }
             else return new ResponseOutputDto { Message = "User verification denied!", Success = false };
         }
-
-        public async Task<ResponseOutputDto> GetAllResultAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<ResponseOutputDto> UpdateUserNameAsync(int id, UserNameUpdateInputDto dto, CancellationToken cancellationToken = default)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
-            var score = await _context.Scoreboards.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
+            if (user == null) return new ResponseOutputDto { Message = "User not found!", Success = false };
+            user.Name = dto.Name;
+            await _context.SaveChangesAsync(cancellationToken);
 
-            if (user == null && score == null) return new ResponseOutputDto { Message = "User not found!", Success = false };
-
-            var UserResult = new UserResultGetAllDto
-            {
-                Id = id,
-                Name = user.Name,
-                Email = user.Email,
-                TotalScore = score.TotalScore,
-                TotalXp = score.TotalXp
-            };
-
-            return new ResponseOutputDto { Message = "Succesful fetch!", Success = true, Result = UserResult };
+            return new ResponseOutputDto { Message = "User Updated successfully!", Success = true };
         }
 
-        public async Task<ResponseOutputDto> VerifyPasswordAsync(UserPasswordVerifyInputDto dto, CancellationToken cancellationToken = default)
+
+        public async Task<ResponseOutputDto> LoginAsync(UserLoginInputDto dto, CancellationToken cancellationToken = default)
         {
             var name = await _context.Users.FirstOrDefaultAsync(x => x.Name == dto.Name, cancellationToken);
             var email = await _context.Users.FirstOrDefaultAsync(x => x.Email == dto.Email, cancellationToken);
@@ -202,15 +206,9 @@ namespace BackEnd.Application.Services
             }
             return new ResponseOutputDto { Message = "Incorrect password!" ,Success = false };
         }
-
-        public async Task<ResponseOutputDto> UpdateUserNameAsync(int id, UserNameUpdateDto dto, CancellationToken cancellationToken = default)
+        public Task<ResponseOutputDto> RegisterAsync(UserRegisterInputDto dto, CancellationToken cancellationToken = default)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
-            if (user == null) return new ResponseOutputDto { Message = "User not found!", Success = false };
-            user.Name = dto.Name;
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return new ResponseOutputDto { Message = "User Updated successfully!" ,Success = true};
+            throw new NotImplementedException();
         }
     }
 }

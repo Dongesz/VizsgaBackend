@@ -1,4 +1,4 @@
-﻿using BackEnd.Application.DTOs;
+﻿using BackEnd.Application.DTOs.Scoreboard;
 using BackEnd.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -44,7 +44,6 @@ namespace BackEnd.Api.Controllers
                 return Problem(detail: ex?.InnerException?.Message);
             }
         }
-
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
         {
@@ -64,9 +63,8 @@ namespace BackEnd.Api.Controllers
                 return Problem(detail: ex?.InnerException?.Message);
             }
         }
-
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update(int id, [FromBody] ScoreboardSendDto dto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Update(int id, [FromBody] ScoreboardSendInputDto dto, CancellationToken cancellationToken)
         {
             try
             {

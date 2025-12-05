@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BackEnd.Application.DTOs
+namespace BackEnd.Application.DTOs.Scoreboard
 {
     // Data transfer az adatok lekeresere
-    public class ScoreboardSendDto
+    public class ScoreboardSendInputDto
     {
         public int? TotalScore { get; set; }
 

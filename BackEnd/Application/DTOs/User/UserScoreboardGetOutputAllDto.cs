@@ -1,9 +1,7 @@
-﻿namespace BackEnd.Application.DTOs
+﻿namespace BackEnd.Application.DTOs.User
 {
-    public class UserScoreboardByIdDto
+    public class UserScoreboardGetOutputAllDto
     {
-        public int Id { get; set; }
-
         public string? Name { get; set; } = null!;
 
         public int? TotalScore { get; set; }

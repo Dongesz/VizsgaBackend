@@ -1,8 +1,8 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 
-namespace BackEnd.Application.DTOs
+namespace BackEnd.Application.DTOs.User
 {
-    public class UsersGetDto
+    public class UsersGetOutputDto
     {
         public int Id { get; set; }
 

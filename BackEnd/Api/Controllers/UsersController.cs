@@ -201,7 +201,7 @@ namespace BackEnd.Api.Controllers
             }
         }
 
-        [HttpGet("playerResult")]
+        [HttpGet("playerResult/{id:int}")]
         public async Task<IActionResult> UserResultGetAll(int id, CancellationToken cancellationToken)
         {
             try
@@ -237,6 +237,26 @@ namespace BackEnd.Api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Player-Password-Verify error: {ex?.InnerException?.Message}");
+                return Problem(detail: ex?.InnerException?.Message);
+            }
+        }
+
+        [HttpPost("playerUserUpdate/{id:int}")]
+        public async Task<IActionResult> UserNameUpdateById(int id, UserNameUpdateDto dto , CancellationToken cancellationToken)
+        {
+            try
+            {
+                var ok = await _service.UpdateUserNameAsync(id, dto, cancellationToken);
+                return Ok(ok);
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.LogInformation("User-Name-Update cancelled.");
+                return BadRequest("Request cancelled.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"User-Name-Update error: {ex?.InnerException?.Message}");
                 return Problem(detail: ex?.InnerException?.Message);
             }
         }

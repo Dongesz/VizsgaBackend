@@ -204,5 +204,15 @@ namespace BackEnd.Application.Services
             }
             return new ResponseOutputDto { Message = "Incorrect password!" ,Success = false };
         }
+
+        public async Task<ResponseOutputDto> UpdateUserNameAsync(int id, UserNameUpdateDto dto, CancellationToken cancellationToken = default)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            if (user == null) return new ResponseOutputDto { Message = "User not found!", Success = false };
+            user.Name = dto.Name;
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return new ResponseOutputDto { Message = "User Updated successfully!" ,Success = true};
+        }
     }
 }

@@ -18,5 +18,6 @@ namespace BackEnd.Application.Services
         Task<ResponseOutputDto> UpdateUserPasswordAsync(UserPasswordUpdateInputDto dto, CancellationToken cancellationToken = default);   
         Task<ResponseOutputDto> GetAllResultAsync(int id, CancellationToken cancellationToken = default);
         Task<ResponseOutputDto> VerifyPasswordAsync(UserPasswordVerifyInputDto dto, CancellationToken cancellationToken = default);
+        Task<ResponseOutputDto> UpdateUserNameAsync(int id, UserNameUpdateDto dto, CancellationToken cancellationToken = default);
     }
 }

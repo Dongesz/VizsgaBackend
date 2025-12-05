@@ -30,7 +30,7 @@ namespace BackEnd.Application.Services
             return new ResponseOutputDto { Message = "Successful fetch!", Success = true, Result = _mapper.Map<List<ScoreboardGetDto>>(score) }; 
         }
 
-        public async Task<ResponseOutputDto?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<ResponseOutputDto> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             var score = await _context.Scoreboards.FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
             if (score == null) return new ResponseOutputDto { Message = "Score not found!", Success = false };

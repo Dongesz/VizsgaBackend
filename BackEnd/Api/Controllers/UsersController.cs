@@ -241,7 +241,7 @@ namespace BackEnd.Api.Controllers
             }
         }
 
-        [HttpPost("playerUserUpdate/{id:int}")]
+        [HttpPost("playerNameUpdate/{id:int}")]
         public async Task<IActionResult> UserNameUpdateById(int id, UserNameUpdateDto dto , CancellationToken cancellationToken)
         {
             try

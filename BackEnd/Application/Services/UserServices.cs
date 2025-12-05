@@ -19,13 +19,11 @@ namespace BackEnd.Application.Services
     {
         private readonly DatabaseContext _context;
         private readonly IMapper _mapper;
-        private readonly ILogger<UsersService> _logger;
 
-        public UsersService(DatabaseContext context, IMapper mapper, ILogger<UsersService> logger)
+        public UsersService(DatabaseContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
-            _logger = logger;
         }
 
         public async Task<ResponseOutputDto> GetAllAsync(CancellationToken cancellationToken = default)
@@ -98,7 +96,7 @@ namespace BackEnd.Application.Services
 
         public async Task<ResponseOutputDto> GetUserCountAsync(CancellationToken cancellationToken = default)
         {
-            var count = await _context.Users.CountAsync(cancellationToken);
+            int? count = await _context.Users.CountAsync(cancellationToken);
             if (count == null) return new ResponseOutputDto { Message = "Couldn't fetch player count!", Success = false};
             var playerCount = new UserCountDto
             {

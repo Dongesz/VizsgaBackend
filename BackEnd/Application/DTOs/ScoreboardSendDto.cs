@@ -1,4 +1,6 @@
-﻿namespace BackEnd.Application.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BackEnd.Application.DTOs
 {
     // Data transfer az adatok lekeresere
     public class ScoreboardSendDto

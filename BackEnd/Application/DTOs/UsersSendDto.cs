@@ -1,14 +1,19 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace BackEnd.Application.DTOs
 {
     public class UsersSendDto
     {
-        public string? Name { get; set; } = null!;
-
-        public string? Email { get; set; } = null!;
-
-        public string? Password { get; set; } = null!;
+        [Required]
+        [StringLength(50)]
+        public string? Name { get; set; }
+        [Required]
+        [StringLength(50)]
+        public string? Email { get; set; }
+        [Required]
+        [StringLength(25)]
+        public string? Password { get; set; }
 
         [JsonIgnore]
         public string UserType { get; set; } = "player";

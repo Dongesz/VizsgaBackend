@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BackEnd.Application.DTOs;
 using BackEnd.Application.DTOs.Scoreboard;
 using BackEnd.Application.DTOs.User;
 using BackEnd.Domain.Models;
@@ -13,7 +14,9 @@ namespace BackEnd.Application.Mappers
             // Mapper config a Users modelre
             CreateMap<User, UsersGetOutputDto>();        
             CreateMap<UsersSendInputDto, User>();       
-            CreateMap<User, UsersSendInputDto>();       
+            CreateMap<User, UsersSendInputDto>();
+            CreateMap<UserRegisterInputDto, User>();
+            CreateMap<User, UserRegisterInputDto>();
 
             // Mapper config a Scoreboard modelre
             CreateMap<Scoreboard, ScoreboardGetOutputDto>();   

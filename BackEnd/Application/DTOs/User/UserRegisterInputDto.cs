@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace BackEnd.Application.DTOs
 {
@@ -13,5 +14,8 @@ namespace BackEnd.Application.DTOs
         [Required]
         [StringLength(25)]
         public string? Password { get; set; }
+
+        [JsonIgnore]
+        public string UserType { get; set; } = "player";
     }
 }

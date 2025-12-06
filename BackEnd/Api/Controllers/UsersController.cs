@@ -1,4 +1,5 @@
-﻿using BackEnd.Application.DTOs.User;
+﻿using BackEnd.Application.DTOs;
+using BackEnd.Application.DTOs.User;
 using BackEnd.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -194,7 +195,7 @@ namespace BackEnd.Api.Controllers
             }
         }
 
-        [HttpPost("playerNameUpdate/{id:int}")]
+        [HttpPut("playerNameUpdate/{id:int}")]
         public async Task<IActionResult> UserNameUpdateById(int id, UserNameUpdateInputDto dto, CancellationToken cancellationToken)
         {
             try
@@ -234,7 +235,7 @@ namespace BackEnd.Api.Controllers
         }
 
         [HttpPost("playerLogin")]
-        public async Task<IActionResult> UserPasswordVerify(UserLoginInputDto dto, CancellationToken cancellationToken)
+        public async Task<IActionResult> UserLogin(UserLoginInputDto dto, CancellationToken cancellationToken)
         {
             try
             {
@@ -243,12 +244,31 @@ namespace BackEnd.Api.Controllers
             }
             catch (OperationCanceledException)
             {
-                _logger.LogInformation("Player-Password-Verify cancelled.");
+                _logger.LogInformation("User login cancelled.");
                 return BadRequest("Request cancelled.");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Player-Password-Verify error: {ex?.InnerException?.Message}");
+                _logger.LogError(ex, $"User login error: {ex?.InnerException?.Message}");
+                return Problem(detail: ex?.InnerException?.Message);
+            }
+        }
+        [HttpPost("playerRegister")]
+        public async Task<IActionResult> UserRegister(UserRegisterInputDto dto, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var ok = await _service.RegisterAsync(dto, cancellationToken);
+                return Ok(ok);
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.LogInformation("User register cancelled.");
+                return BadRequest("Request cancelled.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"User register error: {ex?.InnerException?.Message}");
                 return Problem(detail: ex?.InnerException?.Message);
             }
         }

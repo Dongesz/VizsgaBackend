@@ -202,13 +202,33 @@ namespace BackEnd.Application.Services
             {
                 var verify = BCrypt.Net.BCrypt.Verify(dto.Password, email.PasswordHash);
                 if (verify)
-                    return new ResponseOutputDto { Message = "Successfull login!", Success = true };
+                    return new ResponseOutputDto { Message = "Successful login!", Success = true };
             }
             return new ResponseOutputDto { Message = "Incorrect password!" ,Success = false };
         }
-        public Task<ResponseOutputDto> RegisterAsync(UserRegisterInputDto dto, CancellationToken cancellationToken = default)
+        public async Task<ResponseOutputDto> RegisterAsync(UserRegisterInputDto dto, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var userToAdd = _mapper.Map<User>(dto);
+            userToAdd.CreatedAt = DateTime.UtcNow;
+            userToAdd.UpdatedAt = DateTime.UtcNow;
+            userToAdd.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto?.Password);
+
+            await _context.Users.AddAsync(userToAdd, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
+
+            var scoreToAdd = new Scoreboard
+            {
+                UserId = userToAdd.Id,
+                TotalScore = 0,
+                TotalXp = 0,
+                LastUpdated = DateTime.UtcNow
+            };
+            await _context.Scoreboards.AddAsync(scoreToAdd, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
+
+            await _context.Entry(userToAdd).Reference(u => u.Scoreboard).LoadAsync(cancellationToken);
+
+            return new ResponseOutputDto { Message = "Successful registration!", Success = true, Result = _mapper.Map<UsersGetOutputDto>(userToAdd)};
         }
     }
 }

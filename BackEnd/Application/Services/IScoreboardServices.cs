@@ -14,3 +14,5 @@ namespace BackEnd.Application.Services
         Task<ResponseOutputDto> UpdateAsync(int id, ScoreboardSendInputDto dto, CancellationToken cancellationToken = default);
     }
 }
+
+

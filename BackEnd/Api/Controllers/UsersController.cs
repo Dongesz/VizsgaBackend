@@ -137,25 +137,7 @@ namespace BackEnd.Api.Controllers
                 return Problem(detail: ex?.InnerException?.Message);
             }
         }
-        [HttpGet("playerScore")]
-        public async Task<IActionResult> UserScoreboardAll(CancellationToken cancellationToken)
-        {
-            try
-            {
-                var ok = await _service.GetAllUserScoreboardAsync(cancellationToken);
-                return Ok(ok);
-            }
-            catch (OperationCanceledException)
-            {
-                _logger.LogInformation("Get Player-Score cancelled.");
-                return BadRequest("Request cancelled.");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"All Player Score by error: {ex?.InnerException?.Message}");
-                return Problem(detail: ex?.InnerException?.Message);
-            }
-        }
+
         [HttpGet("playerScore/{id:int}")]
         public async Task<IActionResult> UserScoreboardById(int id, CancellationToken cancellationToken)
         {
@@ -175,12 +157,32 @@ namespace BackEnd.Api.Controllers
                 return Problem(detail: ex?.InnerException?.Message);
             }
         }
-        [HttpGet("playerResult/{id:int}")]
-        public async Task<IActionResult> UserResultGetAll(int id, CancellationToken cancellationToken)
+        [HttpGet("playerScore")]
+        public async Task<IActionResult> UserScoreboardAll(CancellationToken cancellationToken)
         {
             try
             {
-                var ok = await _service.GetAllResultAsync(id, cancellationToken);
+                var ok = await _service.GetAllUserScoreboardAsync(cancellationToken);
+                return Ok(ok);
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.LogInformation("Get Player-Score cancelled.");
+                return BadRequest("Request cancelled.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"All Player Score by error: {ex?.InnerException?.Message}");
+                return Problem(detail: ex?.InnerException?.Message);
+            }
+        }
+        
+        [HttpGet("playerResult/{id:int}")]
+        public async Task<IActionResult> UserResultGetById(int id, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var ok = await _service.GetByIdResultAsync(id, cancellationToken);
                 return Ok(ok);
             }
             catch (OperationCanceledException)

@@ -19,7 +19,7 @@ namespace BackEnd.Application.Services
         Task<ResponseOutputDto> GetUserCountAsync(CancellationToken cancellationToken = default);
         Task<ResponseOutputDto> GetAllUserScoreboardAsync(CancellationToken cancellationToken = default);
         Task<ResponseOutputDto> GetByIdUserScoreboardAsync(int id, CancellationToken cancellationToken = default);
-        Task<ResponseOutputDto> GetAllResultAsync(int id, CancellationToken cancellationToken = default);
+        Task<ResponseOutputDto> GetByIdResultAsync(int id, CancellationToken cancellationToken = default);
         
         // Updates
         Task<ResponseOutputDto> UpdateUserNameAsync(int id, UserNameUpdateInputDto dto, CancellationToken cancellationToken = default);

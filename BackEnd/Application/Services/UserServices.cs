@@ -140,7 +140,7 @@ namespace BackEnd.Application.Services
             }
             return new ResponseOutputDto { Message = "Succesful fetch!", Success = true, Result = userScoreboardList };
         }
-        public async Task<ResponseOutputDto> GetAllResultAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<ResponseOutputDto> GetByIdResultAsync(int id, CancellationToken cancellationToken = default)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
             var score = await _context.Scoreboards.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
@@ -232,3 +232,5 @@ namespace BackEnd.Application.Services
         }
     }
 }
+
+

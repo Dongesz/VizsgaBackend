@@ -22,6 +22,8 @@ namespace BackEnd
                 });
             });
 
+            // kulso eleresi ut az apihoz
+
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

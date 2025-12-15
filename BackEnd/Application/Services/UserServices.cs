@@ -196,13 +196,13 @@ namespace BackEnd.Application.Services
             if (name != null)
             {
                 var verify = BCrypt.Net.BCrypt.Verify(dto.Password, name.PasswordHash);
-                if (verify) return new ResponseOutputDto { Message = "Successfull login!" ,Success = true, Result = new { Id = name.Id } };
+                if (verify) return new ResponseOutputDto { Message = "Successfull login!" ,Success = true };
             }
             else if (email != null)
             {
                 var verify = BCrypt.Net.BCrypt.Verify(dto.Password, email.PasswordHash);
                 if (verify)
-                    return new ResponseOutputDto { Message = "Successful login!", Success = true, Result = new { Id = email.Id } };
+                    return new ResponseOutputDto { Message = "Successful login!", Success = true };
             }
             return new ResponseOutputDto { Message = "Incorrect password!" ,Success = false };
         }

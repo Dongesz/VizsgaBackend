@@ -232,18 +232,25 @@ namespace BackEnd.Application.Services
 
         public async Task<ResponseOutputDto> GetByIdProfilePicture(int id, CancellationToken cancellationToken = default)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
             if (user == null)
                 return new ResponseOutputDto { Message = "User not found!", Success = false };
 
-            var pic = await _context.DefaultPictures.FirstOrDefaultAsync(x => x.Id == user.DefaultPictureUrl);
+            if (!string.IsNullOrEmpty(user.CustomPictureUrl))
+            {
+                return new ResponseOutputDto { Message = "Custom Picture!", Success = true, Result = user.CustomPictureUrl };
+            }
 
-            if (pic == null)
-                return new ResponseOutputDto { Message = "Picture not found!", Success = false };
+            if (user.DefaultPictureUrl.HasValue)
+            {
+                var pic = await _context.DefaultPictures.FirstOrDefaultAsync(x => x.Id == user.DefaultPictureUrl.Value, cancellationToken);
+                if (pic != null)
+                    return new ResponseOutputDto { Message = "Default Picture!", Success = true, Result = pic };
+            }
 
-            return new ResponseOutputDto { Message = "Succesful fetch!", Success = true, Result = pic };
-
+            return new ResponseOutputDto { Message = "Picture not found!", Success = false };
         }
+
     }
 }
 

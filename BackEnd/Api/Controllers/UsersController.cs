@@ -274,5 +274,24 @@ namespace BackEnd.Api.Controllers
                 return Problem(detail: ex?.InnerException?.Message);
             }
         }
+        [HttpGet("playerProfilePicture/{id:int}")]
+        public async Task<IActionResult> UserProfilePicture(int id, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var ok = await _service.GetByIdProfilePicture(id, cancellationToken);
+                return Ok(ok);
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.LogInformation("Profile picture get cancelled.");
+                return BadRequest("Profile picture get cancelled.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Profile picture get error: {ex?.InnerException?.Message}");
+                return Problem(detail: ex?.InnerException?.Message);
+            }
+        }
     }
 }

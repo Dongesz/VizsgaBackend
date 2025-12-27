@@ -185,7 +185,6 @@ namespace BackEnd.Application.Services
             return new ResponseOutputDto { Message = "User Updated successfully!", Success = true };
         }
 
-
         public async Task<ResponseOutputDto> LoginAsync(UserLoginInputDto dto, CancellationToken cancellationToken = default)
         {
             var name = await _context.Users.FirstOrDefaultAsync(x => x.Name == dto.Name, cancellationToken);
@@ -229,6 +228,21 @@ namespace BackEnd.Application.Services
             await _context.Entry(userToAdd).Reference(u => u.Scoreboard).LoadAsync(cancellationToken);
 
             return new ResponseOutputDto { Message = "Successful registration!", Success = true, Result = _mapper.Map<UsersGetOutputDto>(userToAdd)};
+        }
+
+        public async Task<ResponseOutputDto> GetByIdProfilePicture(int id, CancellationToken cancellationToken = default)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
+            if (user == null)
+                return new ResponseOutputDto { Message = "User not found!", Success = false };
+
+            var pic = await _context.DefaultPictures.FirstOrDefaultAsync(x => x.Id == user.DefaultPictureUrl);
+
+            if (pic == null)
+                return new ResponseOutputDto { Message = "Picture not found!", Success = false };
+
+            return new ResponseOutputDto { Message = "Succesful fetch!", Success = true, Result = pic };
+
         }
     }
 }

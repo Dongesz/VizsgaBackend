@@ -7,27 +7,30 @@ ALTER TABLE Scoreboard AUTO_INCREMENT = 1;
 ALTER TABLE Users AUTO_INCREMENT = 1;
 ALTER TABLE Audit_log AUTO_INCREMENT = 1;
 
-INSERT INTO Users (Id, Name, Email, PasswordHash, UserType, CreatedAt, UpdatedAt) VALUES
-(1, 'Dongesz', 'dongesz@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'admin', NOW(), "2025-09-01 12:00:00"),
-(2, 'LapMa', 'lapma@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'admin', NOW(), NOW()),
-(3, 'Ariandel Frostborn', 'ariandel.frost@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', NOW(), NOW()),
-(4, 'Korin Nightvale', 'korin.night@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', NOW(), NOW()),
-(5, 'Seraph Emberwind', 'seraph.ember@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', NOW(), NOW()),
-(6, 'Valeon Duskrider', 'valeon.dusk@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', NOW(), NOW()),
-(7, 'Elyra Moonshade', 'elyra.moon@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', NOW(), NOW()),
-(8, 'Tharos Ironsoul', 'tharos.iron@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', NOW(), NOW()),
-(9, 'Nymeris Ashwalker', 'nymeris.ash@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', NOW(), NOW()),
-(10, 'Rhazor Stormclaw', 'rhazor.storm@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', NOW(), NOW()),
-(11, 'Kaelis Thornborn', 'kaelis.thorn@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', NOW(), "2025-09-01 12:00:00"),
-(12, 'Oswyn Greymantle', 'oswyn.grey@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', NOW(), NOW()),
-(13, 'Eloria Dawnsong', 'eloria.dawn@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', NOW(), NOW()),
-(14, 'Varik Stonefury', 'varik.stone@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', NOW(), NOW()),
-(15, 'Selira Windpetal', 'selira.wind@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', NOW(), NOW()),
-(16, 'Mareth Blackspear', 'mareth.black@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', NOW(), "2025-09-01 12:00:00"),
-(17, 'Tyron Valecrest', 'tyron.vale@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', NOW(), NOW()),
-(18, 'Iselyn Starwhisper', 'iselyn.star@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', NOW(), NOW()),
-(19, 'Braxen Wolfhelm', 'braxen.wolf@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', NOW(), NOW()),
-(20, 'Riven Sharpclaw', 'riven.sharp@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', NOW(), "2025-09-01 12:00:00");
+INSERT INTO Users 
+(Id, Name, Email, PasswordHash, UserType, DefaultPictureUrl, CreatedAt, UpdatedAt)
+VALUES
+(1, 'Dongesz', 'dongesz@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'admin',  FLOOR(RAND()*8)+1, NOW(), '2025-09-01 12:00:00'),
+(2, 'LapMa', 'lapma@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'admin',  FLOOR(RAND()*8)+1, NOW(), NOW()),
+(3, 'Ariandel Frostborn', 'ariandel.frost@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
+(4, 'Korin Nightvale', 'korin.night@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
+(5, 'Seraph Emberwind', 'seraph.ember@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
+(6, 'Valeon Duskrider', 'valeon.dusk@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
+(7, 'Elyra Moonshade', 'elyra.moon@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
+(8, 'Tharos Ironsoul', 'tharos.iron@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
+(9, 'Nymeris Ashwalker', 'nymeris.ash@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
+(10, 'Rhazor Stormclaw', 'rhazor.storm@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
+(11, 'Kaelis Thornborn', 'kaelis.thorn@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), '2025-09-01 12:00:00'),
+(12, 'Oswyn Greymantle', 'oswyn.grey@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
+(13, 'Eloria Dawnsong', 'eloria.dawn@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
+(14, 'Varik Stonefury', 'varik.stone@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
+(15, 'Selira Windpetal', 'selira.wind@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
+(16, 'Mareth Blackspear', 'mareth.black@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), '2025-09-01 12:00:00'),
+(17, 'Tyron Valecrest', 'tyron.vale@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
+(18, 'Iselyn Starwhisper', 'iselyn.star@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
+(19, 'Braxen Wolfhelm', 'braxen.wolf@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
+(20, 'Riven Sharpclaw', 'riven.sharp@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), '2025-09-01 12:00:00');
+
 
 INSERT INTO Scoreboard (UserId, TotalScore, TotalXp, LastUpdate) VALUES
 (1, 999999, 999999, "2025-09-01 12:00:00"),

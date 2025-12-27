@@ -28,5 +28,8 @@ namespace BackEnd.Application.Services
         // Login & register
         Task<ResponseOutputDto> LoginAsync(UserLoginInputDto dto, CancellationToken cancellationToken = default);
         Task<ResponseOutputDto> RegisterAsync(UserRegisterInputDto dto, CancellationToken cancellationToken = default);
+
+        // Profile Pictures
+        Task<ResponseOutputDto> GetByIdProfilePicture(int id, CancellationToken cancellationToken = default);
     }
 }

@@ -18,6 +18,7 @@ public partial class DatabaseContext : DbContext
     // Dbsetek - database tablak reprezentalasa
     public virtual DbSet<Scoreboard> Scoreboards { get; set; }
     public virtual DbSet<User> Users { get; set; }
+    public DbSet<DefaultPicture> DefaultPictures { get; set; }  // <-- ez kell
 
     // Ez a metodus leirja hogy milyen formaban forditsa majd sql codera az entitast az EF. Pl tablak felepitese, kapcsolatai, mezok nevei, tulajdonsagai stb.
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -53,6 +54,11 @@ public partial class DatabaseContext : DbContext
              .HasForeignKey<Scoreboard>(s => s.UserId)
              .OnDelete(DeleteBehavior.Cascade);
         });
+
+        modelBuilder.Entity<User>()
+            .HasOne(u => u.DefaultPicture)
+            .WithMany() 
+            .HasForeignKey(u => u.DefaultPictureUrl);
 
         OnModelCreatingPartial(modelBuilder);
     }

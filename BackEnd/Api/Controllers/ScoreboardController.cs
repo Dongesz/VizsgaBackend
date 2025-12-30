@@ -10,7 +10,7 @@ namespace BackEnd.Api.Controllers
 {
     // Controller reteg - itt jonnek letre a tenyleges vegpontok, a muveletek a service retegbol kerulnek ki.
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class ScoreboardController : ControllerBase
     {
         // Mezok a DI hez

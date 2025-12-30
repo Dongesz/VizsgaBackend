@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace BackEnd.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class UsersController : ControllerBase
     {
         private readonly IUsersService _service;

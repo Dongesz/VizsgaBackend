@@ -22,6 +22,8 @@ namespace BackEnd
                 });
             });
 
+
+
             // kulso eleresi ut az apihoz
 
             builder.Services.AddControllers();
@@ -42,16 +44,16 @@ namespace BackEnd
 
             var app = builder.Build();
 
+            app.UsePathBase("/api");
+
             // Cors aktivalasa
             app.UseCors("AllowAll");
 
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+           
+           
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
-            app.UseHttpsRedirection();
             app.UseAuthorization();
             app.MapControllers();
 

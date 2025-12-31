@@ -1,7 +1,8 @@
-using Microsoft.EntityFrameworkCore;
-using BackEnd.Infrastructure.Database;
-using BackEnd.Application.Services;
+using BackEnd.Application.Helpers;
 using BackEnd.Application.Mappers;
+using BackEnd.Application.Services;
+using BackEnd.Infrastructure.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace BackEnd
 {
@@ -36,6 +37,7 @@ namespace BackEnd
                 options.UseMySql(conn, ServerVersion.AutoDetect(conn)));
 
             // Seged osztalyok registralasa
+            builder.Services.AddScoped<UploadHelper>();
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
             // Interfacek registralasa (DI)
@@ -48,9 +50,6 @@ namespace BackEnd
 
             // Cors aktivalasa
             app.UseCors("AllowAll");
-
-           
-           
             app.UseSwagger();
             app.UseSwaggerUI();
 

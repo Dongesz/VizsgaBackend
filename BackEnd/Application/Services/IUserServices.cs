@@ -31,5 +31,6 @@ namespace BackEnd.Application.Services
 
         // Profile Pictures
         Task<ResponseOutputDto> GetByIdProfilePicture(int id, CancellationToken cancellationToken = default);
+        Task<ResponseOutputDto> UploadCustomProfilePicture(int id, IFormFile file, CancellationToken cancellationToken = default);
     }
 }

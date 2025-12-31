@@ -13,6 +13,7 @@ using System.Diagnostics.Contracts;
 using System.Security.Cryptography.Xml;
 using Microsoft.AspNetCore.Connections;
 using BackEnd.Application.DTOs.User;
+using BackEnd.Application.Helpers;
 
 namespace BackEnd.Application.Services
 {
@@ -20,11 +21,13 @@ namespace BackEnd.Application.Services
     {
         private readonly DatabaseContext _context;
         private readonly IMapper _mapper;
+        private readonly UploadHelper _uploadHelper;
 
-        public UsersService(DatabaseContext context, IMapper mapper)
+        public UsersService(DatabaseContext context, IMapper mapper, UploadHelper uploadhelper)
         {
             _context = context;
             _mapper = mapper;
+            _uploadHelper = uploadhelper;
         }
 
         public async Task<ResponseOutputDto> GetAllAsync(CancellationToken cancellationToken = default)
@@ -238,7 +241,7 @@ namespace BackEnd.Application.Services
 
             if (!string.IsNullOrEmpty(user.CustomPictureUrl))
             {
-                return new ResponseOutputDto { Message = "Custom Picture!", Success = true, Result = user.CustomPictureUrl };
+                return new ResponseOutputDto { Message = "Custom Picture!", Success = true, Result = "https://dongesz.com/images/" + user.CustomPictureUrl };
             }
 
             if (user.DefaultPictureUrl.HasValue)
@@ -251,6 +254,24 @@ namespace BackEnd.Application.Services
             return new ResponseOutputDto { Message = "Picture not found!", Success = false };
         }
 
+        public async Task<ResponseOutputDto> UploadCustomProfilePicture(int id, IFormFile file, CancellationToken cancellationToken = default)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
+
+            string existingFileName = user?.CustomPictureUrl;
+
+            string rootPath = Directory.GetCurrentDirectory();
+
+            var result = await _uploadHelper.UploadFileAsync(file, rootPath, existingFileName);
+
+            if (result.Success == true && result.Result != null)
+            {
+                user.CustomPictureUrl = result.Result.ToString();
+                _context.SaveChangesAsync();
+            }
+
+            return new ResponseOutputDto { Message = "Picture not found!", Success = true, Result = existingFileName};
+        }
     }
 }
 

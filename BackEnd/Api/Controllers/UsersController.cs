@@ -275,11 +275,30 @@ namespace BackEnd.Api.Controllers
             }
         }
         [HttpGet("playerProfilePicture/{id:int}")]
-        public async Task<IActionResult> UserProfilePicture(int id, CancellationToken cancellationToken)
+        public async Task<IActionResult> UserProfilePictureGet(int id, CancellationToken cancellationToken)
         {
             try
             {
                 var ok = await _service.GetByIdProfilePicture(id, cancellationToken);
+                return Ok(ok);
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.LogInformation("Profile picture get cancelled.");
+                return BadRequest("Profile picture get cancelled.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Profile picture get error: {ex?.InnerException?.Message}");
+                return Problem(detail: ex?.InnerException?.Message);
+            }
+        }
+        [HttpPost("playerProfilePictureSet/{id:int}")]
+        public async Task<IActionResult> UserProfilePictureSet(int id, IFormFile file, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var ok = await _service.UploadCustomProfilePicture(id, file, cancellationToken);
                 return Ok(ok);
             }
             catch (OperationCanceledException)

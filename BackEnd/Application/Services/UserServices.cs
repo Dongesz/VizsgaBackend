@@ -256,8 +256,10 @@ namespace BackEnd.Application.Services
 
         public async Task<ResponseOutputDto> UploadCustomProfilePicture(int id, IFormFile file, CancellationToken cancellationToken = default)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
+            if (user == null) return new ResponseOutputDto { Message = "User not found!", Success = false };
+            else if (file == null) return new ResponseOutputDto { Message = "File not found!", Success = false };
             string existingFileName = user?.CustomPictureUrl;
 
             string rootPath = Directory.GetCurrentDirectory();
@@ -267,10 +269,12 @@ namespace BackEnd.Application.Services
             if (result.Success == true && result.Result != null)
             {
                 user.CustomPictureUrl = result.Result.ToString();
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+                return new ResponseOutputDto { Message = "Custom picture uploaded successfully!", Success = true, Result = result.Result };
             }
+            return new ResponseOutputDto { Message = "Some error occured during file upload!", Success = false, Result = result.Result};
 
-            return new ResponseOutputDto { Message = "Picture not found!", Success = true, Result = existingFileName};
+
         }
     }
 }

@@ -7,7 +7,7 @@ namespace BackEnd.Application.Helpers
         public async Task<ResponseOutputDto> UploadFileAsync(IFormFile file, string rootPath, string existingFileName = null)
         {
             var validExtensions = new List<string> { ".jpg", ".png", ".gif" };
-            var ext = Path.GetExtension(file.FileName);
+            var ext = Path.GetExtension(file.FileName).ToLower();
 
             if (!validExtensions.Contains(ext))
                 return new ResponseOutputDto { Message = $"Invalid file format! ({string.Join(',', validExtensions)})", Success = false };
@@ -24,15 +24,13 @@ namespace BackEnd.Application.Helpers
                 if (File.Exists(oldPath)) File.Delete(oldPath);
             }
 
-            Directory.CreateDirectory(path);
-
             var filePath = Path.Combine(path, fileName);
             await using var stream = new FileStream(filePath, FileMode.Create);
             await file.CopyToAsync(stream);
 
             return new ResponseOutputDto
             {
-                Message = "File successfully uploaded!",
+                Message = "File successfully uploaded to the cloud!",
                 Success = true,
                 Result = fileName
             };

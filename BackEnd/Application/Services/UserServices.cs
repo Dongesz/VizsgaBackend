@@ -148,7 +148,7 @@ namespace BackEnd.Application.Services
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
             var score = await _context.Scoreboards.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
 
-            if (user == null && score == null) return new ResponseOutputDto { Message = "User not found!", Success = false };
+            if (user == null || score == null) return new ResponseOutputDto { Message = "User not found!", Success = false };
 
             var UserResult = new UserResultGetAllOutputDto
             {
@@ -156,7 +156,9 @@ namespace BackEnd.Application.Services
                 Name = user.Name,
                 Email = user.Email,
                 TotalScore = score.TotalScore,
-                TotalXp = score.TotalXp
+                TotalXp = score.TotalXp,
+                CreatedAt = user.CreatedAt,
+                UpdatedAt = user.UpdatedAt
             };
 
             return new ResponseOutputDto { Message = "Succesful fetch!", Success = true, Result = UserResult };
@@ -185,7 +187,16 @@ namespace BackEnd.Application.Services
             user.Name = dto.Name;
             await _context.SaveChangesAsync(cancellationToken);
 
-            return new ResponseOutputDto { Message = "User Updated successfully!", Success = true };
+            return new ResponseOutputDto { Message = "User name Updated successfully!", Success = true };
+        }
+        public async Task<ResponseOutputDto> UpdateUserBioAsync(int id, UserBioUpdateInputDto dto, CancellationToken cancellationToken = default)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            if (user == null) return new ResponseOutputDto { Message = "User not found!", Success = false };
+            user.Name = dto.Bio;
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return new ResponseOutputDto { Message = "User bio Updated successfully!", Success = true };
         }
 
         public async Task<ResponseOutputDto> LoginAsync(UserLoginInputDto dto, CancellationToken cancellationToken = default)
@@ -198,13 +209,13 @@ namespace BackEnd.Application.Services
             if (name != null)
             {
                 var verify = BCrypt.Net.BCrypt.Verify(dto.Password, name.PasswordHash);
-                if (verify) return new ResponseOutputDto { Message = "Successfull login!" ,Success = true };
+                if (verify) return new ResponseOutputDto { Message = "Successfull login!" ,Success = true, Result = name.Id };
             }
             else if (email != null)
             {
                 var verify = BCrypt.Net.BCrypt.Verify(dto.Password, email.PasswordHash);
                 if (verify)
-                    return new ResponseOutputDto { Message = "Successful login!", Success = true };
+                    return new ResponseOutputDto { Message = "Successful login!", Success = true, Result = email.Id };
             }
             return new ResponseOutputDto { Message = "Incorrect password!" ,Success = false };
         }

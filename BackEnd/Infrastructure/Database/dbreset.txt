@@ -1,11 +1,11 @@
 DELETE FROM Scoreboard;
 DELETE FROM Users;
-DELETE FROM Audit_log;
+DELETE FROM AuditLog;
 
 
 ALTER TABLE Scoreboard AUTO_INCREMENT = 1;
 ALTER TABLE Users AUTO_INCREMENT = 1;
-ALTER TABLE Audit_log AUTO_INCREMENT = 1;
+ALTER TABLE AuditLog AUTO_INCREMENT = 1;
 
 INSERT INTO Users 
 (Id, Name, Email, PasswordHash, UserType, DefaultPictureUrl, CreatedAt, UpdatedAt)

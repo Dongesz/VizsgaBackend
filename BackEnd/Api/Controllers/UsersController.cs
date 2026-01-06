@@ -235,6 +235,26 @@ namespace BackEnd.Api.Controllers
                 return Problem(detail: ex?.InnerException?.Message);
             }
         }
+        [HttpPut("playerBioUpdate/{id:int}")]
+        public async Task<IActionResult> UserBioUpdateById(int id ,UserBioUpdateInputDto dto, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var ok = await _service.UpdateUserBioAsync(id ,dto, cancellationToken);
+                return Ok(ok);
+            }
+            catch (OperationCanceledException)
+            {
+                _logger.LogInformation("Player bio update cancelled.");
+                return BadRequest("Request cancelled.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Player bio update by id error: {ex?.InnerException?.Message}");
+                return Problem(detail: ex?.InnerException?.Message);
+            }
+        }
+
 
         [HttpPost("playerLogin")]
         public async Task<IActionResult> UserLogin(UserLoginInputDto dto, CancellationToken cancellationToken)

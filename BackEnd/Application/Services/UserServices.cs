@@ -46,42 +46,6 @@ namespace BackEnd.Application.Services
             if (user == null) return new ResponseOutputDto { Message = "User not found!", Success = false};
             return  new ResponseOutputDto { Message = "Successful fetch!", Success = true, Result = _mapper.Map<UsersGetOutputDto>(user) };  
         }
-        public async Task<ResponseOutputDto> CreateAsync(UsersSendInputDto dto, CancellationToken cancellationToken = default)
-        {
-            var userToAdd = _mapper.Map<User>(dto);
-            userToAdd.CreatedAt = DateTime.UtcNow;
-            userToAdd.UpdatedAt = DateTime.UtcNow;
-            userToAdd.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto?.Password);
-
-            await _context.Users.AddAsync(userToAdd, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
-
-            var scoreToAdd = new Scoreboard
-            {
-                UserId = userToAdd.Id,
-                TotalScore = 0,
-                TotalXp = 0,
-                LastUpdated = DateTime.UtcNow
-            };
-            await _context.Scoreboards.AddAsync(scoreToAdd, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
-
-            await _context.Entry(userToAdd).Reference(u => u.Scoreboard).LoadAsync(cancellationToken);
-
-            return new ResponseOutputDto { Message = "User created successfully!", Success = true, Result = _mapper.Map<UsersGetOutputDto>(userToAdd) };
-        }
-        public async Task<ResponseOutputDto> UpdateAsync(int id, UsersSendInputDto dto, CancellationToken cancellationToken = default)
-        {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
-            if (user == null) return new ResponseOutputDto { Message = "User not found!", Success = false };
-
-            _mapper.Map(dto, user);
-            user.UpdatedAt = DateTime.UtcNow;
-            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto?.Password);
-
-            await _context.SaveChangesAsync(cancellationToken);
-            return new ResponseOutputDto { Message = "User updated successfully!", Success = true };
-        }
         public async Task<ResponseOutputDto> DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
@@ -105,22 +69,6 @@ namespace BackEnd.Application.Services
                 PlayerCount = count
             };
             return new ResponseOutputDto { Message = "Successful fetch!", Success = true, Result = playerCount };
-        }
-        public async Task<ResponseOutputDto> GetByIdUserScoreboardAsync(int id, CancellationToken cancellationToken = default)
-        {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
-            var score = await _context.Scoreboards.FirstOrDefaultAsync(x => x.UserId == id, cancellationToken);
-
-            if (user == null && score == null) return new ResponseOutputDto { Message = "User not found!", Success = false };
-
-            var userScoreboard = new UserScoreboardByIdOutputDto
-            {
-                Id = id,
-                Name = user.Name,
-                TotalScore = score.TotalScore,
-                TotalXp = score.TotalXp
-            };
-            return new ResponseOutputDto { Message = "Succesful fetch!", Success = true, Result = userScoreboard};
         }
         public async Task<ResponseOutputDto> GetAllUserScoreboardAsync(CancellationToken cancellationToken = default)
         {
@@ -248,26 +196,6 @@ namespace BackEnd.Application.Services
             return new ResponseOutputDto { Message = "Successful registration!", Success = true, Result = _mapper.Map<UsersGetOutputDto>(userToAdd)};
         }
 
-        public async Task<ResponseOutputDto> GetByIdProfilePicture(int id, CancellationToken cancellationToken = default)
-        {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
-            if (user == null)
-                return new ResponseOutputDto { Message = "User not found!", Success = false };
-
-            if (!string.IsNullOrEmpty(user.CustomPictureUrl))
-            {
-                return new ResponseOutputDto { Message = "Custom Picture!", Success = true, Result = "https://dongesz.com/images/" + user.CustomPictureUrl };
-            }
-
-            if (user.DefaultPictureUrl.HasValue)
-            {
-                var pic = await _context.DefaultPictures.FirstOrDefaultAsync(x => x.Id == user.DefaultPictureUrl.Value, cancellationToken);
-                if (pic != null)
-                    return new ResponseOutputDto { Message = "Default Picture!", Success = true, Result = pic };
-            }
-
-            return new ResponseOutputDto { Message = "Picture not found!", Success = false };
-        }
 
         public async Task<ResponseOutputDto> UploadCustomProfilePicture(int id, IFormFile file, CancellationToken cancellationToken = default)
         {

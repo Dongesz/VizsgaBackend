@@ -25,44 +25,7 @@ namespace BackEnd.Api.Controllers
         }
 
         // A controller metodusok meghivjak a hozzajuk tartozo service metodust, majd hibakezelessel kievgeszitve vegpontot keszitenek belole
-        [HttpGet]
-        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
-        {
-            try
-            {
-                var ok = await _service.GetAllAsync(cancellationToken);
-                return Ok(ok);
-            }
-            catch (OperationCanceledException)
-            {
-                _logger.LogInformation("GetAll was cancelled.");
-                return BadRequest("Request cancelled.");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "GetAll failed");
-                return Problem(detail: ex?.InnerException?.Message);
-            }
-        }
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
-        {
-            try
-            {
-                var ok = await _service.GetByIdAsync(id, cancellationToken);
-                return Ok(ok);
-            }
-            catch (OperationCanceledException)
-            {
-                _logger.LogInformation("GetById was cancelled.");
-                return BadRequest("Request cancelled.");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "GetById {Id} failed", id);
-                return Problem(detail: ex?.InnerException?.Message);
-            }
-        }
+     
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id, [FromBody] ScoreboardSendInputDto dto, CancellationToken cancellationToken)
         {

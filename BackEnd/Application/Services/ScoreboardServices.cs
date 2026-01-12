@@ -24,20 +24,6 @@ namespace BackEnd.Application.Services
         }
 
         // Async muveletek kulonbozo celu vegpontokhoz cancellation tokennel egyut
-        public async Task<ResponseOutputDto> GetAllAsync(CancellationToken cancellationToken = default)
-        {
-            var score = await _context.Scoreboards.ToListAsync(cancellationToken);
-            if (score == null) return new ResponseOutputDto { Message = "Scores not found!", Success = false};
-            return new ResponseOutputDto { Message = "Successful fetch!", Success = true, Result = _mapper.Map<List<ScoreboardGetOutputDto>>(score) }; 
-        }
-
-        public async Task<ResponseOutputDto> GetByIdAsync(int id, CancellationToken cancellationToken = default)
-        {
-            var score = await _context.Scoreboards.FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
-            if (score == null) return new ResponseOutputDto { Message = "Score not found!", Success = false };
-            return new ResponseOutputDto { Message = "Successful fetch!", Success = true, Result = _mapper.Map<ScoreboardGetOutputDto>(score) };
-        }
-
         public async Task<ResponseOutputDto> UpdateAsync(int id, ScoreboardSendInputDto dto, CancellationToken cancellationToken = default)
         {
             var score = await _context.Scoreboards.FirstOrDefaultAsync(s => s.Id == id, cancellationToken);

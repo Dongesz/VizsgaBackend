@@ -20,7 +20,6 @@ namespace BackEnd.Api.Controllers
             _service = service;
             _logger = logger;
         }
-
         [HttpGet]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
@@ -56,44 +55,6 @@ namespace BackEnd.Api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "GetById {Id} failed", id);
-                return Problem(detail: ex?.InnerException?.Message);
-            }
-        }
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] UsersSendInputDto dto, CancellationToken cancellationToken)
-        {
-            try
-            {
-                var ok = await _service.CreateAsync(dto, cancellationToken);
-                return Ok(ok);
-            }
-            catch (OperationCanceledException)
-            {
-                _logger.LogInformation("Create user cancelled.");
-                return BadRequest("Request cancelled.");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Create user failed.");
-                return Problem(detail: ex?.InnerException?.Message);
-            }
-        }
-        [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update(int id, [FromBody] UsersSendInputDto dto, CancellationToken cancellationToken)
-        {
-            try
-            {
-                var ok = await _service.UpdateAsync(id, dto, cancellationToken);
-                return Ok(ok);
-            }
-            catch (OperationCanceledException)
-            {
-                _logger.LogInformation("Update user cancelled.");
-                return BadRequest("Request cancelled.");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Update {Id} failed", id);
                 return Problem(detail: ex?.InnerException?.Message);
             }
         }
@@ -138,25 +99,6 @@ namespace BackEnd.Api.Controllers
             }
         }
 
-        [HttpGet("playerScore/{id:int}")]
-        public async Task<IActionResult> UserScoreboardById(int id, CancellationToken cancellationToken)
-        {
-            try
-            {
-                var ok = await _service.GetByIdUserScoreboardAsync(id, cancellationToken);
-                return Ok(ok);
-            }
-            catch (OperationCanceledException)
-            {
-                _logger.LogInformation("Get Player-Score cancelled.");
-                return BadRequest("Request cancelled.");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Player Score by id error: {ex?.InnerException?.Message}");
-                return Problem(detail: ex?.InnerException?.Message);
-            }
-        }
         [HttpGet("playerScore")]
         public async Task<IActionResult> UserScoreboardAll(CancellationToken cancellationToken)
         {
@@ -294,25 +236,7 @@ namespace BackEnd.Api.Controllers
                 return Problem(detail: ex?.InnerException?.Message);
             }
         }
-        [HttpGet("playerProfilePicture/{id:int}")]
-        public async Task<IActionResult> UserProfilePictureGet(int id, CancellationToken cancellationToken)
-        {
-            try
-            {
-                var ok = await _service.GetByIdProfilePicture(id, cancellationToken);
-                return Ok(ok);
-            }
-            catch (OperationCanceledException)
-            {
-                _logger.LogInformation("Profile picture get cancelled.");
-                return BadRequest("Profile picture get cancelled.");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Profile picture get error: {ex?.InnerException?.Message}");
-                return Problem(detail: ex?.InnerException?.Message);
-            }
-        }
+        
         [HttpPost("playerProfilePictureSet/{id:int}")]
         public async Task<IActionResult> UserProfilePictureSet(int id, IFormFile file, CancellationToken cancellationToken = default)
         {

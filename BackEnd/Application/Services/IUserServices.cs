@@ -11,14 +11,11 @@ namespace BackEnd.Application.Services
         // Crud
         Task<ResponseOutputDto> GetAllAsync(CancellationToken cancellationToken = default);
         Task<ResponseOutputDto> GetByIdAsync(int id, CancellationToken cancellationToken = default);
-        Task<ResponseOutputDto> CreateAsync(UsersSendInputDto dto, CancellationToken cancellationToken = default);
-        Task<ResponseOutputDto> UpdateAsync(int id, UsersSendInputDto dto, CancellationToken cancellationToken = default);
         Task<ResponseOutputDto> DeleteAsync(int id, CancellationToken cancellationToken = default);
 
         // Gets
         Task<ResponseOutputDto> GetUserCountAsync(CancellationToken cancellationToken = default);
         Task<ResponseOutputDto> GetAllUserScoreboardAsync(CancellationToken cancellationToken = default);
-        Task<ResponseOutputDto> GetByIdUserScoreboardAsync(int id, CancellationToken cancellationToken = default);
         Task<ResponseOutputDto> GetByIdResultAsync(int id, CancellationToken cancellationToken = default);
         
         // Updates
@@ -31,7 +28,6 @@ namespace BackEnd.Application.Services
         Task<ResponseOutputDto> RegisterAsync(UserRegisterInputDto dto, CancellationToken cancellationToken = default);
 
         // Profile Pictures
-        Task<ResponseOutputDto> GetByIdProfilePicture(int id, CancellationToken cancellationToken = default);
         Task<ResponseOutputDto> UploadCustomProfilePicture(int id, IFormFile file, CancellationToken cancellationToken = default);
     }
 }

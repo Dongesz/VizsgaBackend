@@ -3,6 +3,7 @@ using BackEnd.Application.Mappers;
 using BackEnd.Application.Services;
 using BackEnd.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace BackEnd
 {
@@ -29,7 +30,12 @@ namespace BackEnd
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+            });
+
 
             // Conn string lekerese, Dbcontext - Database kapcsolat felallitasa
             var conn = builder.Configuration.GetConnectionString("DefaultConnection");

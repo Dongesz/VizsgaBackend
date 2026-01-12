@@ -25,7 +25,13 @@ namespace BackEnd.Api.Controllers
         }
 
         // A controller metodusok meghivjak a hozzajuk tartozo service metodust, majd hibakezelessel kievgeszitve vegpontot keszitenek belole
-     
+
+        /// <summary>
+        /// Játékos pontszámának frissítése
+        /// </summary>
+        /// <remarks>
+        /// Frontend usage: TBD
+        /// </remarks>
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id, [FromBody] ScoreboardSendInputDto dto, CancellationToken cancellationToken)
         {

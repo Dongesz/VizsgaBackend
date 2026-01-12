@@ -121,6 +121,7 @@ namespace BackEnd.Application.Services
                 Name = user.Name,
                 Email = user.Email,
                 Bio = user.Bio,
+                UserType = user.UserType,
                 ProfilePictureUrl = await _pictureHelper.GetProfilePictureUrlAsync(id),
                 TotalScore = score.TotalScore,
                 TotalXp = score.TotalXp,

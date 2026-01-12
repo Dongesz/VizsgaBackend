@@ -9,6 +9,9 @@
 
         public string? Bio { get; set; } = null;
 
+        public string UserType { get; set; } = null!;
+
+
         public string ProfilePictureUrl { get; set; } = null;
 
         public int? TotalScore { get; set; }

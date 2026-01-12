@@ -10,9 +10,9 @@ namespace BackEnd.Application.DTOs.User
 
         public string? Email { get; set; } = null!;
 
-        public int? DefaultPictureUrl { get; set; } = null;
+        public string? Bio { get; set; } = null;
 
-        public string? CustomPictureUrl { get; set; } = null;
+        public string ProfilePictureUrl { get; set; } = null;
 
         public string? UserType { get; set; } = null!;
     }

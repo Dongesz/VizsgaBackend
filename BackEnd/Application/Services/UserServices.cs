@@ -35,16 +35,29 @@ namespace BackEnd.Application.Services
         public async Task<ResponseOutputDto> GetAllAsync(CancellationToken cancellationToken = default)
         {
             var users = await _context.Users.ToListAsync(cancellationToken);
-            if (users == null) return new ResponseOutputDto { Message = "Users not found!", Success = false};
+            if (users == null || users.Count == 0) return new ResponseOutputDto { Message = "Users not found!", Success = false };
 
-            return new ResponseOutputDto { Message = "Successful fetch!", Success = true, Result = _mapper.Map<List<UsersGetOutputDto>>(users) }; 
+            var result = new List<UsersGetOutputDto>();
+
+            foreach (var user in users)
+            {
+                var dto = _mapper.Map<UsersGetOutputDto>(user);
+                dto.ProfilePictureUrl = await _pictureHelper.GetProfilePictureUrlAsync(user.Id);
+
+                result.Add(dto);
+            }
+
+            return new ResponseOutputDto { Message = "Successful fetch!", Success = true, Result = result};
         }
         public async Task<ResponseOutputDto> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
-
             if (user == null) return new ResponseOutputDto { Message = "User not found!", Success = false};
-            return  new ResponseOutputDto { Message = "Successful fetch!", Success = true, Result = _mapper.Map<UsersGetOutputDto>(user) };  
+
+            var dto = _mapper.Map<UsersGetOutputDto>(user);
+            dto.ProfilePictureUrl = await _pictureHelper.GetProfilePictureUrlAsync(user.Id);
+
+            return  new ResponseOutputDto { Message = "Successful fetch!", Success = true, Result = dto};  
         }
         public async Task<ResponseOutputDto> DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
@@ -78,16 +91,17 @@ namespace BackEnd.Application.Services
             if (users == null && scores == null) return new ResponseOutputDto { Message = "User not found!", Success = false };
 
             var userScoreboardList = new List<UserScoreboardGetOutputAllDto>();
-            foreach (var item in users)
+            foreach (var user in users)
             {
-                var score = scores.Find(x => x.UserId == item.Id);
+                var score = scores.Find(x => x.UserId == user.Id);
                 if (score == null) continue;
 
                 var userScoreboard = new UserScoreboardGetOutputAllDto
                 {
-                    Name = item.Name,
+                    Name = user.Name,
                     TotalScore = score.TotalScore,
-                    TotalXp = score.TotalXp
+                    TotalXp = score.TotalXp,
+                    ProfilePictureUrl = await _pictureHelper.GetProfilePictureUrlAsync(user.Id)
                 };
                 userScoreboardList.Add(userScoreboard);
             }

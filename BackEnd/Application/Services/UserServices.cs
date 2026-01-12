@@ -22,12 +22,14 @@ namespace BackEnd.Application.Services
         private readonly DatabaseContext _context;
         private readonly IMapper _mapper;
         private readonly UploadHelper _uploadHelper;
+        private readonly ProfilePictureHelper _pictureHelper;
 
-        public UsersService(DatabaseContext context, IMapper mapper, UploadHelper uploadhelper)
+        public UsersService(DatabaseContext context, IMapper mapper, UploadHelper uploadhelper, ProfilePictureHelper pictureHelper)
         {
             _context = context;
             _mapper = mapper;
             _uploadHelper = uploadhelper;
+            _pictureHelper = pictureHelper;
         }
 
         public async Task<ResponseOutputDto> GetAllAsync(CancellationToken cancellationToken = default)
@@ -155,6 +157,8 @@ namespace BackEnd.Application.Services
                 Id = id,
                 Name = user.Name,
                 Email = user.Email,
+                Bio = user.Bio,
+                ProfilePictureUrl = await _pictureHelper.GetProfilePictureUrlAsync(id),
                 TotalScore = score.TotalScore,
                 TotalXp = score.TotalXp,
                 CreatedAt = user.CreatedAt,
@@ -193,7 +197,7 @@ namespace BackEnd.Application.Services
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
             if (user == null) return new ResponseOutputDto { Message = "User not found!", Success = false };
-            user.Name = dto.Bio;
+            user.Bio = dto.Bio;
             await _context.SaveChangesAsync(cancellationToken);
 
             return new ResponseOutputDto { Message = "User bio Updated successfully!", Success = true };

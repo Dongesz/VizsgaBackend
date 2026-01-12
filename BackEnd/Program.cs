@@ -38,6 +38,7 @@ namespace BackEnd
 
             // Seged osztalyok registralasa
             builder.Services.AddScoped<UploadHelper>();
+            builder.Services.AddScoped<ProfilePictureHelper>();
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
             // Interfacek registralasa (DI)

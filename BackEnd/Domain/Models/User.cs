@@ -10,8 +10,11 @@ public partial class User
     public string? Name { get; set; } = null!;
 
     public string? Email { get; set; } = null!;
+
     public string? Bio { get; set; } = null;
+
     public int? DefaultPictureUrl { get; set; } = null;
+
     public string? CustomPictureUrl { get; set; } = null;
 
     public string? PasswordHash { get; set; } = null!;
@@ -23,6 +26,7 @@ public partial class User
     public DateTime? UpdatedAt { get; set; }
 
     public virtual Scoreboard? Scoreboard { get; set; }
+
     public virtual DefaultPicture? DefaultPicture { get; set; }
 
 }

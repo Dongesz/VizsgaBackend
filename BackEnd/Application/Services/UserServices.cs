@@ -232,8 +232,6 @@ namespace BackEnd.Application.Services
                 return new ResponseOutputDto { Message = "Custom picture uploaded successfully!", Success = true, Result = result.Result };
             }
             return new ResponseOutputDto { Message = "Some error occured during file upload!", Success = false, Result = result.Result};
-
-
         }
     }
 }

@@ -2,35 +2,132 @@ DELETE FROM Scoreboard;
 DELETE FROM Users;
 DELETE FROM AuditLog;
 
-
 ALTER TABLE Scoreboard AUTO_INCREMENT = 1;
 ALTER TABLE Users AUTO_INCREMENT = 1;
 ALTER TABLE AuditLog AUTO_INCREMENT = 1;
 
 INSERT INTO Users 
-(Id, Name, Email, PasswordHash, UserType, DefaultPictureUrl, CreatedAt, UpdatedAt)
+(Id, Name, Email, PasswordHash, UserType, DefaultPictureUrl, Bio, CreatedAt, UpdatedAt)
 VALUES
-(1, 'Dongesz', 'dongesz@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'admin',  FLOOR(RAND()*8)+1, NOW(), '2025-09-01 12:00:00'),
-(2, 'LapMa', 'lapma@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'admin',  FLOOR(RAND()*8)+1, NOW(), NOW()),
-(3, 'Ariandel Frostborn', 'ariandel.frost@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
-(4, 'Korin Nightvale', 'korin.night@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
-(5, 'Seraph Emberwind', 'seraph.ember@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
-(6, 'Valeon Duskrider', 'valeon.dusk@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
-(7, 'Elyra Moonshade', 'elyra.moon@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
-(8, 'Tharos Ironsoul', 'tharos.iron@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
-(9, 'Nymeris Ashwalker', 'nymeris.ash@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
-(10, 'Rhazor Stormclaw', 'rhazor.storm@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
-(11, 'Kaelis Thornborn', 'kaelis.thorn@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), '2025-09-01 12:00:00'),
-(12, 'Oswyn Greymantle', 'oswyn.grey@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
-(13, 'Eloria Dawnsong', 'eloria.dawn@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
-(14, 'Varik Stonefury', 'varik.stone@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
-(15, 'Selira Windpetal', 'selira.wind@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
-(16, 'Mareth Blackspear', 'mareth.black@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), '2025-09-01 12:00:00'),
-(17, 'Tyron Valecrest', 'tyron.vale@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
-(18, 'Iselyn Starwhisper', 'iselyn.star@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
-(19, 'Braxen Wolfhelm', 'braxen.wolf@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), NOW()),
-(20, 'Riven Sharpclaw', 'riven.sharp@example.com', '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e', 'player', FLOOR(RAND()*8)+1, NOW(), '2025-09-01 12:00:00');
+(1, 'Dongesz', 'dongesz@example.com',
+ '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e',
+ 'admin', FLOOR(RAND()*8)+1,
+ 'Founder of the CastL platform and lead backend developer. Focused on building clean, maintainable systems with real-world scalability in mind.',
+ NOW(), '2025-09-01 12:00:00'),
 
+(2, 'LapMa', 'lapma@example.com',
+ '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e',
+ 'admin', FLOOR(RAND()*8)+1,
+ 'System administrator responsible for keeping services stable, secure, and performant.',
+ NOW(), NOW()),
+
+(3, 'Ariandel Frostborn', 'ariandel.frost@example.com',
+ '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e',
+ 'player', FLOOR(RAND()*8)+1,
+ 'A calm and analytical player who prefers strategic planning over brute force. Known for mastering complex mechanics.',
+ NOW(), NOW()),
+
+(4, 'Korin Nightvale', 'korin.night@example.com',
+ '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e',
+ 'player', FLOOR(RAND()*8)+1,
+ 'Quiet but highly competitive, Korin relies on precision, patience, and perfectly timed decisions.',
+ NOW(), NOW()),
+
+(5, 'Seraph Emberwind', 'seraph.ember@example.com',
+ '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e',
+ 'player', FLOOR(RAND()*8)+1,
+ 'An aggressive, fast-paced player who constantly experiments with risky but powerful strategies.',
+ NOW(), NOW()),
+
+(6, 'Valeon Duskrider', 'valeon.dusk@example.com',
+ '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e',
+ 'player', FLOOR(RAND()*8)+1,
+ 'A balanced competitor focused on consistency, efficiency, and long-term progression.',
+ NOW(), NOW()),
+
+(7, 'Elyra Moonshade', 'elyra.moon@example.com',
+ '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e',
+ 'player', FLOOR(RAND()*8)+1,
+ 'Enjoys exploration and uncovering hidden mechanics. Often optimizes lesser-used playstyles.',
+ NOW(), NOW()),
+
+(8, 'Tharos Ironsoul', 'tharos.iron@example.com',
+ '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e',
+ 'player', FLOOR(RAND()*8)+1,
+ 'A disciplined and resilient player known for strong endgame performance.',
+ NOW(), NOW()),
+
+(9, 'Nymeris Ashwalker', 'nymeris.ash@example.com',
+ '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e',
+ 'player', FLOOR(RAND()*8)+1,
+ 'Thrives in unpredictable scenarios and adapts quickly to changing conditions.',
+ NOW(), NOW()),
+
+(10, 'Rhazor Stormclaw', 'rhazor.storm@example.com',
+ '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e',
+ 'player', FLOOR(RAND()*8)+1,
+ 'Highly competitive and ranking-driven, always pushing for top leaderboard positions.',
+ NOW(), NOW()),
+
+(11, 'Kaelis Thornborn', 'kaelis.thorn@example.com',
+ '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e',
+ 'player', FLOOR(RAND()*8)+1,
+ 'Creative player who enjoys combining mechanics in unconventional but effective ways.',
+ NOW(), '2025-09-01 12:00:00'),
+
+(12, 'Oswyn Greymantle', 'oswyn.grey@example.com',
+ '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e',
+ 'player', FLOOR(RAND()*8)+1,
+ 'Methodical and thoughtful, focusing on long-term planning and sustainable growth.',
+ NOW(), NOW()),
+
+(13, 'Eloria Dawnsong', 'eloria.dawn@example.com',
+ '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e',
+ 'player', FLOOR(RAND()*8)+1,
+ 'Enjoys cooperative play and theorycrafting while constantly refining her skills.',
+ NOW(), NOW()),
+
+(14, 'Varik Stonefury', 'varik.stone@example.com',
+ '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e',
+ 'player', FLOOR(RAND()*8)+1,
+ 'Straightforward and resilient, preferring reliability over risky tactics.',
+ NOW(), NOW()),
+
+(15, 'Selira Windpetal', 'selira.wind@example.com',
+ '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e',
+ 'player', FLOOR(RAND()*8)+1,
+ 'Agile and adaptable, excelling in fast-paced situations that require quick decisions.',
+ NOW(), NOW()),
+
+(16, 'Mareth Blackspear', 'mareth.black@example.com',
+ '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e',
+ 'player', FLOOR(RAND()*8)+1,
+ 'Defensive-minded player known for surviving even the most punishing encounters.',
+ NOW(), '2025-09-01 12:00:00'),
+
+(17, 'Tyron Valecrest', 'tyron.vale@example.com',
+ '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e',
+ 'player', FLOOR(RAND()*8)+1,
+ 'Driven by constant improvement and competitive spirit.',
+ NOW(), NOW()),
+
+(18, 'Iselyn Starwhisper', 'iselyn.star@example.com',
+ '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e',
+ 'player', FLOOR(RAND()*8)+1,
+ 'Enjoys mastering complex systems and long-form challenges.',
+ NOW(), NOW()),
+
+(19, 'Braxen Wolfhelm', 'braxen.wolf@example.com',
+ '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e',
+ 'player', FLOOR(RAND()*8)+1,
+ 'Resilient and determined, rarely backing down from difficult situations.',
+ NOW(), NOW()),
+
+(20, 'Riven Sharpclaw', 'riven.sharp@example.com',
+ '$2a$12$w7H8dgwO5q8wQYJQMdGyeOrWkP5Pj4K0ynE5RqYh3xK0kCbt0sR9e',
+ 'player', FLOOR(RAND()*8)+1,
+ 'Fast and aggressive, focused on decisive execution and constant pressure.',
+ NOW(), '2025-09-01 12:00:00');
 
 INSERT INTO Scoreboard (UserId, TotalScore, TotalXp, LastUpdate) VALUES
 (1, 999999, 999999, "2025-09-01 12:00:00"),

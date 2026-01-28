@@ -13,8 +13,7 @@ namespace BackEnd.Application.Mappers
         {
             // Mapper config a Users modelre
             CreateMap<User, UsersGetOutputDto>();        
-            CreateMap<UserRegisterInputDto, User>();
-            CreateMap<User, UserRegisterInputDto>();
+
 
             // Mapper config a Scoreboard modelre
             CreateMap<Scoreboard, ScoreboardGetOutputDto>();   

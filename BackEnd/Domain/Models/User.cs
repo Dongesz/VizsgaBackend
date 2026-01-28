@@ -7,6 +7,7 @@ public partial class User
 {
     public int Id { get; set; }
 
+    public string AuthUserId { get; set; } = null!;
     public string? Name { get; set; } = null!;
 
     public string? Email { get; set; } = null!;
@@ -16,10 +17,6 @@ public partial class User
     public int? DefaultPictureUrl { get; set; } = null;
 
     public string? CustomPictureUrl { get; set; } = null;
-
-    public string? PasswordHash { get; set; } = null!;
-
-    public string UserType { get; set; } = null!;
 
     public DateTime? CreatedAt { get; set; }
 

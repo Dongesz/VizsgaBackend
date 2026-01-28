@@ -35,7 +35,7 @@ namespace RoleBasedAuth.Services
                 Audience = _jwtOptions.Audience,
                 Issuer = _jwtOptions.Issuer,
                 Subject = new ClaimsIdentity(claimlist),
-                Expires = DateTime.Now.AddHours(6),
+                Expires = DateTime.Now.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 

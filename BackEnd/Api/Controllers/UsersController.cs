@@ -204,31 +204,6 @@ namespace BackEnd.Api.Controllers
             }
         }
 
-        /// <summary>
-        /// Játékos jelszavának módosítása
-        /// </summary>
-        /// <remarks>
-        /// Frontend usage: TBD
-        /// </remarks>
-        [HttpPut("playerPasswordUpdate")]
-        public async Task<IActionResult> UserPasswordUpdateById(UserPasswordUpdateInputDto dto, CancellationToken cancellationToken)
-        {
-            try
-            {
-                var ok = await _service.UpdateUserPasswordAsync(dto, cancellationToken);
-                return Ok(ok);
-            }
-            catch (OperationCanceledException)
-            {
-                _logger.LogInformation("Player password update cancelled.");
-                return BadRequest("Request cancelled.");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Player password update by id error: {ex?.InnerException?.Message}");
-                return Problem(detail: ex?.InnerException?.Message);
-            }
-        }
 
         /// <summary>
         /// Játékos bemutatkozásának módosítása
@@ -256,58 +231,6 @@ namespace BackEnd.Api.Controllers
             }
         }
 
-        /// <summary>
-        /// Felhasználó bejelentkezés
-        /// </summary>
-        /// <remarks>
-        /// Frontend usage: TBD
-        /// </remarks>
-        [HttpPost("playerLogin")]
-        public async Task<IActionResult> UserLogin(UserLoginInputDto dto, CancellationToken cancellationToken)
-        {
-            try
-            {
-                var ok = await _service.LoginAsync(dto, cancellationToken);
-                return Ok(ok);
-            }
-            catch (OperationCanceledException)
-            {
-                _logger.LogInformation("User login cancelled.");
-                return BadRequest("Request cancelled.");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"User login error: {ex?.InnerException?.Message}");
-                return Problem(detail: ex?.InnerException?.Message);
-            }
-        }
-
-        /// <summary>
-        /// Felhasználó regisztráció
-        /// </summary>
-        /// <remarks>
-        /// Frontend usage: TBD
-        /// </remarks>
-        [HttpPost("playerRegister")]
-
-        public async Task<IActionResult> UserRegister(UserRegisterInputDto dto, CancellationToken cancellationToken)
-        {
-            try
-            {
-                var ok = await _service.RegisterAsync(dto, cancellationToken);
-                return Ok(ok);
-            }
-            catch (OperationCanceledException)
-            {
-                _logger.LogInformation("User register cancelled.");
-                return BadRequest("Request cancelled.");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"User register error: {ex?.InnerException?.Message}");
-                return Problem(detail: ex?.InnerException?.Message);
-            }
-        }
 
         /// <summary>
         /// Felhasználó profilképének feltöltése

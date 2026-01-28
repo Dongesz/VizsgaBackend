@@ -36,8 +36,12 @@ public partial class DatabaseContext : DbContext
             b.Property(u => u.Id).HasColumnName("Id");
             b.Property(u => u.Name).HasColumnName("Name").HasMaxLength(100);
             b.Property(u => u.Email).HasColumnName("Email").HasMaxLength(255).IsRequired();
-            b.Property(u => u.PasswordHash).HasColumnName("PasswordHash").HasMaxLength(255);
-            b.Property(u => u.UserType).HasColumnName("UserType");
+            b.Property(u => u.AuthUserId)
+            .HasColumnName("AuthUserId")
+            .HasMaxLength(36)
+            .IsRequired();
+            b.HasIndex(u => u.AuthUserId)
+            .IsUnique();
             b.Property(u => u.CreatedAt).HasColumnName("CreatedAt");
             b.Property(u => u.UpdatedAt).HasColumnName("UpdatedAt");
         });

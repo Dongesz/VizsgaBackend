@@ -49,28 +49,33 @@ namespace RoleBasedAuth.Services
 
         public async Task<object> Login(LoginDto dto)
         {
-            try
-            {
-                var user = await _context.ApplicationUsers.FirstOrDefaultAsync(x => x.NormalizedUserName == dto.UserName.ToUpper());
-                bool isValid = await _userManager.CheckPasswordAsync(user, dto.Password);
+            var user = await _userManager.FindByNameAsync(dto.UserName);
 
-                if (isValid)
+            if (user == null)
+            {
+                return new { message = "Hibás felhasználónév vagy jelszó" };
+            }
+
+            var isValidPassword = await _userManager.CheckPasswordAsync(user, dto.Password);
+
+            if (!isValidPassword)
+            {
+                return new { message = "Hibás felhasználónév vagy jelszó" };
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            var token = _tokenGenerator.GenerateToken(user, roles);
+
+            return new
+            {
+                result = new
                 {
-                    var roles = await _userManager.GetRolesAsync(user);
-                    var jwtToken = _tokenGenerator.GenerateToken(user, roles);
-
-                    return new { result = new {user.UserName, user.Email}, message = "sikeres login!", token = jwtToken};
-             
-                }
-                return new { result = "", message = "sikertelen login!" };
-
-            }
-            catch (Exception ex)
-            {
-
-                return new { result = "", message = ex.Message };
-              
-            }
+                    user.UserName,
+                    user.Email
+                },
+                token
+            };
         }
 
         public async Task<object> Register(RegisterRequestDto registerRequestDto)

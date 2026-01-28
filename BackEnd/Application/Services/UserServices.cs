@@ -121,7 +121,6 @@ namespace BackEnd.Application.Services
                 Name = user.Name,
                 Email = user.Email,
                 Bio = user.Bio,
-                UserType = user.UserType,
                 ProfilePictureUrl = await _pictureHelper.GetProfilePictureUrlAsync(id),
                 TotalScore = score.TotalScore,
                 TotalXp = score.TotalXp,
@@ -132,22 +131,6 @@ namespace BackEnd.Application.Services
             return new ResponseOutputDto { Message = "Succesful fetch!", Success = true, Result = UserResult };
         }
 
-        public async Task<ResponseOutputDto> UpdateUserPasswordAsync(UserPasswordUpdateInputDto dto, CancellationToken cancellationToken = default)
-        {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == dto.Email, cancellationToken);
-
-            if (user == null) return new ResponseOutputDto { Message = "User not found!", Success = false };
-            else if (dto.OldPassword == dto.NewPassword) return new ResponseOutputDto { Message = "Old and new password must be differnt!", Success = false };
-
-            var verify = BCrypt.Net.BCrypt.Verify(dto.OldPassword, user.PasswordHash);
-            if (verify)
-            {
-                user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
-                await _context.SaveChangesAsync(cancellationToken);
-                return new ResponseOutputDto { Message = "Password changed successfully", Success = true };
-            }
-            else return new ResponseOutputDto { Message = "User verification denied!", Success = false };
-        }
         public async Task<ResponseOutputDto> UpdateUserNameAsync(int id, UserNameUpdateInputDto dto, CancellationToken cancellationToken = default)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
@@ -166,52 +149,6 @@ namespace BackEnd.Application.Services
 
             return new ResponseOutputDto { Message = "User bio Updated successfully!", Success = true };
         }
-
-        public async Task<ResponseOutputDto> LoginAsync(UserLoginInputDto dto, CancellationToken cancellationToken = default)
-        {
-            var name = await _context.Users.FirstOrDefaultAsync(x => x.Name == dto.Name, cancellationToken);
-            var email = await _context.Users.FirstOrDefaultAsync(x => x.Email == dto.Email, cancellationToken);
-
-            if(name == null && email == null) return new ResponseOutputDto { Message = "Incorrect name or email address!", Success = false };
-
-            if (name != null)
-            {
-                var verify = BCrypt.Net.BCrypt.Verify(dto.Password, name.PasswordHash);
-                if (verify) return new ResponseOutputDto { Message = "Successfull login!" ,Success = true, Result = name.Id };
-            }
-            else if (email != null)
-            {
-                var verify = BCrypt.Net.BCrypt.Verify(dto.Password, email.PasswordHash);
-                if (verify)
-                    return new ResponseOutputDto { Message = "Successful login!", Success = true, Result = email.Id };
-            }
-            return new ResponseOutputDto { Message = "Incorrect password!" ,Success = false };
-        }
-        public async Task<ResponseOutputDto> RegisterAsync(UserRegisterInputDto dto, CancellationToken cancellationToken = default)
-        {
-            var userToAdd = _mapper.Map<User>(dto);
-            userToAdd.CreatedAt = DateTime.UtcNow;
-            userToAdd.UpdatedAt = DateTime.UtcNow;
-            userToAdd.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto?.Password);
-
-            await _context.Users.AddAsync(userToAdd, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
-
-            var scoreToAdd = new Scoreboard
-            {
-                UserId = userToAdd.Id,
-                TotalScore = 0,
-                TotalXp = 0,
-                LastUpdated = DateTime.UtcNow
-            };
-            await _context.Scoreboards.AddAsync(scoreToAdd, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
-
-            await _context.Entry(userToAdd).Reference(u => u.Scoreboard).LoadAsync(cancellationToken);
-
-            return new ResponseOutputDto { Message = "Successful registration!", Success = true, Result = _mapper.Map<UsersGetOutputDto>(userToAdd)};
-        }
-
 
         public async Task<ResponseOutputDto> UploadCustomProfilePicture(int id, IFormFile file, CancellationToken cancellationToken = default)
         {

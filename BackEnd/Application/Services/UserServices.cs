@@ -182,6 +182,30 @@ namespace BackEnd.Application.Services
             return new ResponseOutputDto { Message = "OK", Success = true, Result = dto };
         }
 
+        public async Task<ResponseOutputDto> GetMyResultAsync(ClaimsPrincipal userClaims, CancellationToken cancellationToken = default)
+        {
+            var user = await EnsureUserExistsAsync(userClaims, cancellationToken);
+            return await GetByIdResultAsync(user.Id, cancellationToken);
+        }
+
+        public async Task<ResponseOutputDto> UpdateMyNameAsync(ClaimsPrincipal userClaims, UserNameUpdateInputDto dto, CancellationToken cancellationToken = default)
+        {
+            var user = await EnsureUserExistsAsync(userClaims, cancellationToken);
+            return await UpdateUserNameAsync(user.Id, dto, cancellationToken);
+        }
+
+        public async Task<ResponseOutputDto> UpdateMyBioAsync(ClaimsPrincipal userClaims, UserBioUpdateInputDto dto, CancellationToken cancellationToken = default)
+        {
+            var user = await EnsureUserExistsAsync(userClaims, cancellationToken);
+            return await UpdateUserBioAsync(user.Id, dto, cancellationToken);
+        }
+
+        public async Task<ResponseOutputDto> UploadMyProfilePictureAsync(ClaimsPrincipal userClaims, IFormFile file, CancellationToken cancellationToken = default)
+        {
+            var user = await EnsureUserExistsAsync(userClaims, cancellationToken);
+            return await UploadCustomProfilePicture(user.Id, file, cancellationToken);
+        }
+
         public async Task<User> EnsureUserExistsAsync(
       ClaimsPrincipal userClaims,
       CancellationToken cancellationToken = default)

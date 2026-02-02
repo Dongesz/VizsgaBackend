@@ -5,32 +5,29 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BackEnd.Api.Controllers
+namespace BackEnd.Api.Controllers.Admin
 {
     [ApiController]
-    [Route("[controller]")]
-    public class ScoreboardController : ControllerBase
+    [Route("Admin/Scoreboard")]
+    [Authorize(Roles = "Admin")]
+    public class AdminScoreboardController : ControllerBase
     {
         private readonly IScoreboardService _service;
-        private readonly IUsersService _usersService;
 
-        public ScoreboardController(IScoreboardService service, IUsersService usersService)
+        public AdminScoreboardController(IScoreboardService service)
         {
             _service = service;
-            _usersService = usersService;
         }
 
         /// <summary>
-        /// Update current user's scoreboard. Identity from JWT only.
+        /// Admin: update any user's scoreboard by scoreboard id.
         /// </summary>
-        [Authorize]
-        [HttpPut("me")]
-        public async Task<IActionResult> UpdateMyScoreboard([FromBody] ScoreboardSendInputDto dto, CancellationToken cancellationToken)
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> Update(int id, [FromBody] ScoreboardSendInputDto dto, CancellationToken cancellationToken)
         {
             try
             {
-                var user = await _usersService.EnsureUserExistsAsync(User, cancellationToken);
-                var result = await _service.UpdateMyScoreboardAsync(user.Id, dto, cancellationToken);
+                var result = await _service.UpdateAsync(id, dto, cancellationToken);
                 return Ok(result);
             }
             catch (OperationCanceledException)

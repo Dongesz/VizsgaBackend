@@ -19,227 +19,19 @@ namespace BackEnd.Api.Controllers
             _service = service;
         }
 
-        /// <summary>
-        /// Összes felhasználó lekérdezése
-        /// </summary>
-        /// <remarks>
-        /// Frontend usage: TBD
-        /// </remarks>
-        [Authorize(Roles = "Admin")]
-        [HttpGet]
-        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+
+        [Authorize]
+        [HttpGet("me")]
+        public async Task<IActionResult> Me(CancellationToken cancellationToken)
         {
             try
             {
-                var ok = await _service.GetAllAsync(cancellationToken);
-                return Ok(ok);
+                var result = await _service.GetMeAsync(User, cancellationToken);
+                return Ok(result);
             }
             catch (OperationCanceledException)
             {
                 return BadRequest("Request cancelled.");
-            }
-            catch (Exception ex)
-            {
-                return Problem(detail: ex?.InnerException?.Message);
-            }
-        }
-
-        /// <summary>
-        /// Felhasználó lekérdezése azonosító alapján
-        /// </summary>
-        /// <remarks>
-        /// Frontend usage: TBD
-        /// </remarks>
-        [Authorize(Roles = "Admin")]
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
-        {
-            try
-            {
-                var ok = await _service.GetByIdAsync(id, cancellationToken);
-                return Ok(ok);
-            }
-            catch (OperationCanceledException)
-            {
-                return BadRequest("Request cancelled.");
-            }
-            catch (Exception ex)
-            {
-                return Problem(detail: ex?.InnerException?.Message);
-            }
-        }
-
-        /// <summary>
-        /// Felhasználó törlése azonosító alapján
-        /// </summary>
-        /// <remarks>
-        /// Frontend usage: TBD
-        /// </remarks>
-        [Authorize(Roles = "Admin")]
-        [HttpDelete("{id:int}")]
-        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
-        {
-            try
-            {
-                var ok = await _service.DeleteAsync(id, cancellationToken);
-                return Ok(ok);
-            }
-            catch (OperationCanceledException)
-            {
-                return BadRequest("Request cancelled.");
-            }
-            catch (Exception ex)
-            {
-                return Problem(detail: ex?.InnerException?.Message);
-            }
-        }
-
-        /// <summary>
-        /// Játékosok számának lekérdezése
-        /// </summary>
-        /// <remarks>
-        /// Frontend usage: TBD
-        /// </remarks>
-        [Authorize(Roles = "Admin")]
-        [HttpGet("playerCount")]
-        public async Task<IActionResult> PlayerCount(CancellationToken cancellationToken)
-        {
-            try
-            {
-                var ok = await _service.GetUserCountAsync(cancellationToken);
-                return Ok(ok);
-
-            }
-            catch (OperationCanceledException)
-            {
-                return BadRequest("Request cancelled.");
-            }
-            catch (Exception ex)
-            {
-                return Problem(detail: ex?.InnerException?.Message);
-            }
-        }
-
-        /// <summary>
-        /// Összes játékos pontszámának lekérdezése
-        /// </summary>
-        /// <remarks>
-        /// Frontend usage: TBD
-        /// </remarks>
-        [Authorize(Roles = "Admin")]
-        [HttpGet("playerScore")]
-        public async Task<IActionResult> UserScoreboardAll(CancellationToken cancellationToken)
-        {
-            try
-            {
-                var ok = await _service.GetAllUserScoreboardAsync(cancellationToken);
-                return Ok(ok);
-            }
-            catch (OperationCanceledException)
-            {
-                return BadRequest("Request cancelled.");
-            }
-            catch (Exception ex)
-            {
-                return Problem(detail: ex?.InnerException?.Message);
-            }
-        }
-
-        /// <summary>
-        /// Játékos részletes eredményeinek lekérdezése
-        /// </summary>
-        /// <remarks>
-        /// Frontend usage: TBD
-        /// </remarks>
-        [Authorize(Roles = "Admin")]
-        [HttpGet("playerResult/{id:int}")]
-        public async Task<IActionResult> UserResultGetById(int id, CancellationToken cancellationToken)
-        {
-            try
-            {
-                var ok = await _service.GetByIdResultAsync(id, cancellationToken);
-                return Ok(ok);
-            }
-            catch (OperationCanceledException)
-            {
-                return BadRequest("Request cancelled.");
-            }
-            catch (Exception ex)
-            {
-                return Problem(detail: ex?.InnerException?.Message);
-            }
-        }
-
-        /// <summary>
-        /// Játékos nevének módosítása
-        /// </summary>
-        /// <remarks>
-        /// Frontend usage: TBD
-        /// </remarks>
-        [Authorize(Roles = "Admin")]
-        [HttpPut("playerNameUpdate/{id:int}")]
-        public async Task<IActionResult> UserNameUpdateById(int id, UserNameUpdateInputDto dto, CancellationToken cancellationToken)
-        {
-            try
-            {
-                var ok = await _service.UpdateUserNameAsync(id, dto, cancellationToken);
-                return Ok(ok);
-            }
-            catch (OperationCanceledException)
-            {
-                return BadRequest("Request cancelled.");
-            }
-            catch (Exception ex)
-            {
-                return Problem(detail: ex?.InnerException?.Message);
-            }
-        }
-
-
-        /// <summary>
-        /// Játékos bemutatkozásának módosítása
-        /// </summary>
-        /// <remarks>
-        /// Frontend usage: TBD
-        /// </remarks>
-        [Authorize(Roles = "Admin")]
-        [HttpPut("playerBioUpdate/{id:int}")]
-        public async Task<IActionResult> UserBioUpdateById(int id ,UserBioUpdateInputDto dto, CancellationToken cancellationToken)
-        {
-            try
-            {
-                var ok = await _service.UpdateUserBioAsync(id ,dto, cancellationToken);
-                return Ok(ok);
-            }
-            catch (OperationCanceledException)
-            {
-                return BadRequest("Request cancelled.");
-            }
-            catch (Exception ex)
-            {
-                return Problem(detail: ex?.InnerException?.Message);
-            }
-        }
-
-
-        /// <summary>
-        /// Felhasználó profilképének feltöltése
-        /// </summary>
-        /// <remarks>
-        /// Frontend usage: TBD
-        /// </remarks>
-        [Authorize(Roles = "Admin")]
-        [HttpPost("playerProfilePictureSet/{id:int}")]
-        public async Task<IActionResult> UserProfilePictureSet(int id, IFormFile file, CancellationToken cancellationToken = default)
-        {
-            try
-            {
-                var ok = await _service.UploadCustomProfilePicture(id, file, cancellationToken);
-                return Ok(ok);
-            }
-            catch (OperationCanceledException)
-            {
-                return BadRequest("Profile picture get cancelled.");
             }
             catch (Exception ex)
             {
@@ -248,12 +40,144 @@ namespace BackEnd.Api.Controllers
         }
 
         [Authorize]
-        [HttpGet("me")]
-        public async Task<IActionResult> Me(CancellationToken cancellationToken)
+        [HttpGet("me/result")]
+        public async Task<IActionResult> MeResult(CancellationToken cancellationToken)
         {
-            var result = await _service.GetMeAsync(User, cancellationToken);
-            return Ok(result);
+            try
+            {
+                await _service.EnsureUserExistsAsync(User, cancellationToken);
+                var result = await _service.GetMyResultAsync(User, cancellationToken);
+                return Ok(result);
+            }
+            catch (OperationCanceledException)
+            {
+                return BadRequest("Request cancelled.");
+            }
+            catch (Exception ex)
+            {
+                return Problem(detail: ex?.InnerException?.Message);
+            }
         }
 
+        [Authorize]
+        [HttpPut("me/name")]
+        public async Task<IActionResult> UpdateMyName([FromBody] UserNameUpdateInputDto dto, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _service.UpdateMyNameAsync(User, dto, cancellationToken);
+                return Ok(result);
+            }
+            catch (OperationCanceledException)
+            {
+                return BadRequest("Request cancelled.");
+            }
+            catch (Exception ex)
+            {
+                return Problem(detail: ex?.InnerException?.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpPut("me/bio")]
+        public async Task<IActionResult> UpdateMyBio([FromBody] UserBioUpdateInputDto dto, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _service.UpdateMyBioAsync(User, dto, cancellationToken);
+                return Ok(result);
+            }
+            catch (OperationCanceledException)
+            {
+                return BadRequest("Request cancelled.");
+            }
+            catch (Exception ex)
+            {
+                return Problem(detail: ex?.InnerException?.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpPost("me/profile-picture")]
+        public async Task<IActionResult> UploadMyProfilePicture(IFormFile file, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var result = await _service.UploadMyProfilePictureAsync(User, file, cancellationToken);
+                return Ok(result);
+            }
+            catch (OperationCanceledException)
+            {
+                return BadRequest("Request cancelled.");
+            }
+            catch (Exception ex)
+            {
+                return Problem(detail: ex?.InnerException?.Message);
+            }
+        }
+
+
+        [Authorize]
+        [HttpGet("count")]
+        public async Task<IActionResult> PlayerCount(CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _service.EnsureUserExistsAsync(User, cancellationToken);
+                var result = await _service.GetUserCountAsync(cancellationToken);
+                return Ok(result);
+            }
+            catch (OperationCanceledException)
+            {
+                return BadRequest("Request cancelled.");
+            }
+            catch (Exception ex)
+            {
+                return Problem(detail: ex?.InnerException?.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("scoreboard")]
+        public async Task<IActionResult> UserScoreboardAll(CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _service.EnsureUserExistsAsync(User, cancellationToken);
+                var result = await _service.GetAllUserScoreboardAsync(cancellationToken);
+                return Ok(result);
+            }
+            catch (OperationCanceledException)
+            {
+                return BadRequest("Request cancelled.");
+            }
+            catch (Exception ex)
+            {
+                return Problem(detail: ex?.InnerException?.Message);
+            }
+        }
+
+        /// <summary>
+        /// Get a specific player's result (e.g. for leaderboard detail).
+        /// </summary>
+        [Authorize]
+        [HttpGet("{id:int}/result")]
+        public async Task<IActionResult> UserResult(int id, CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _service.EnsureUserExistsAsync(User, cancellationToken);
+                var result = await _service.GetByIdResultAsync(id, cancellationToken);
+                return Ok(result);
+            }
+            catch (OperationCanceledException)
+            {
+                return BadRequest("Request cancelled.");
+            }
+            catch (Exception ex)
+            {
+                return Problem(detail: ex?.InnerException?.Message);
+            }
+        }
     }
 }

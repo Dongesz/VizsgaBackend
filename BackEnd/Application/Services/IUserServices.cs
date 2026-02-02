@@ -20,16 +20,22 @@ namespace BackEnd.Application.Services
         Task<ResponseOutputDto> GetAllUserScoreboardAsync(CancellationToken cancellationToken = default);
         Task<ResponseOutputDto> GetByIdResultAsync(int id, CancellationToken cancellationToken = default);
         
-        // Updates
+        // Updates (by id - admin use)
         Task<ResponseOutputDto> UpdateUserNameAsync(int id, UserNameUpdateInputDto dto, CancellationToken cancellationToken = default);
         Task<ResponseOutputDto> UpdateUserBioAsync(int id, UserBioUpdateInputDto dto, CancellationToken cancellationToken = default);
 
-        // Profile Pictures
+        Task<ResponseOutputDto> UpdateMyNameAsync(ClaimsPrincipal userClaims, UserNameUpdateInputDto dto, CancellationToken cancellationToken = default);
+        Task<ResponseOutputDto> UpdateMyBioAsync(ClaimsPrincipal userClaims, UserBioUpdateInputDto dto, CancellationToken cancellationToken = default);
+        Task<ResponseOutputDto> UploadMyProfilePictureAsync(ClaimsPrincipal userClaims, IFormFile file, CancellationToken cancellationToken = default);
+
         Task<ResponseOutputDto> UploadCustomProfilePicture(int id, IFormFile file, CancellationToken cancellationToken = default);
 
         Task<User> EnsureUserExistsAsync(ClaimsPrincipal userClaims, CancellationToken cancellationToken = default);
 
         /// <summary>Current user as DTO (for /me). Avoids serializing entity with circular refs.</summary>
         Task<ResponseOutputDto> GetMeAsync(ClaimsPrincipal userClaims, CancellationToken cancellationToken = default);
+
+        /// <summary>Current user's detailed result (for /me/result).</summary>
+        Task<ResponseOutputDto> GetMyResultAsync(ClaimsPrincipal userClaims, CancellationToken cancellationToken = default);
     }
 }

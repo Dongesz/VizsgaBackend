@@ -28,5 +28,15 @@ namespace BackEnd.Application.Services
             await _context.SaveChangesAsync(cancellationToken);
             return new ResponseOutputDto { Message = "Score updated successfully!", Success = true};
         }
+
+        public async Task<ResponseOutputDto> UpdateMyScoreboardAsync(int userId, ScoreboardSendInputDto dto, CancellationToken cancellationToken = default)
+        {
+            var score = await _context.Scoreboards.FirstOrDefaultAsync(s => s.UserId == userId, cancellationToken);
+            if (score == null) return new ResponseOutputDto { Message = "Score not found!", Success = false };
+            _mapper.Map(dto, score);
+            score.LastUpdated = DateTime.UtcNow;
+            await _context.SaveChangesAsync(cancellationToken);
+            return new ResponseOutputDto { Message = "Score updated successfully!", Success = true };
+        }
     }
 }

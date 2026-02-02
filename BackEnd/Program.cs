@@ -81,7 +81,11 @@ public class Program
                 };
             });
 
-        builder.Services.AddAuthorization();
+        builder.Services.AddAuthorization(options =>
+        {
+            options.AddPolicy("AdminOnly", policy =>
+                policy.RequireRole("Admin"));
+        });
 
         var conn = builder.Configuration.GetConnectionString("DefaultConnection");
         builder.Services.AddDbContext<DatabaseContext>(options =>

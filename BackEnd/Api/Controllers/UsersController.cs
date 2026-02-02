@@ -25,6 +25,7 @@ namespace BackEnd.Api.Controllers
         /// <remarks>
         /// Frontend usage: TBD
         /// </remarks>
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
@@ -49,6 +50,7 @@ namespace BackEnd.Api.Controllers
         /// <remarks>
         /// Frontend usage: TBD
         /// </remarks>
+        [Authorize(Roles = "Admin")]
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
         {
@@ -73,6 +75,7 @@ namespace BackEnd.Api.Controllers
         /// <remarks>
         /// Frontend usage: TBD
         /// </remarks>
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
         {
@@ -97,6 +100,7 @@ namespace BackEnd.Api.Controllers
         /// <remarks>
         /// Frontend usage: TBD
         /// </remarks>
+        [Authorize(Roles = "Admin")]
         [HttpGet("playerCount")]
         public async Task<IActionResult> PlayerCount(CancellationToken cancellationToken)
         {
@@ -122,6 +126,7 @@ namespace BackEnd.Api.Controllers
         /// <remarks>
         /// Frontend usage: TBD
         /// </remarks>
+        [Authorize(Roles = "Admin")]
         [HttpGet("playerScore")]
         public async Task<IActionResult> UserScoreboardAll(CancellationToken cancellationToken)
         {
@@ -146,6 +151,7 @@ namespace BackEnd.Api.Controllers
         /// <remarks>
         /// Frontend usage: TBD
         /// </remarks>
+        [Authorize(Roles = "Admin")]
         [HttpGet("playerResult/{id:int}")]
         public async Task<IActionResult> UserResultGetById(int id, CancellationToken cancellationToken)
         {
@@ -170,6 +176,7 @@ namespace BackEnd.Api.Controllers
         /// <remarks>
         /// Frontend usage: TBD
         /// </remarks>
+        [Authorize(Roles = "Admin")]
         [HttpPut("playerNameUpdate/{id:int}")]
         public async Task<IActionResult> UserNameUpdateById(int id, UserNameUpdateInputDto dto, CancellationToken cancellationToken)
         {
@@ -195,6 +202,7 @@ namespace BackEnd.Api.Controllers
         /// <remarks>
         /// Frontend usage: TBD
         /// </remarks>
+        [Authorize(Roles = "Admin")]
         [HttpPut("playerBioUpdate/{id:int}")]
         public async Task<IActionResult> UserBioUpdateById(int id ,UserBioUpdateInputDto dto, CancellationToken cancellationToken)
         {
@@ -220,6 +228,7 @@ namespace BackEnd.Api.Controllers
         /// <remarks>
         /// Frontend usage: TBD
         /// </remarks>
+        [Authorize(Roles = "Admin")]
         [HttpPost("playerProfilePictureSet/{id:int}")]
         public async Task<IActionResult> UserProfilePictureSet(int id, IFormFile file, CancellationToken cancellationToken = default)
         {

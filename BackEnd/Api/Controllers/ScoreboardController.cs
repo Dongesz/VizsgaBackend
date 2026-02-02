@@ -1,5 +1,6 @@
 using BackEnd.Application.DTOs.Scoreboard;
 using BackEnd.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,6 +25,7 @@ namespace BackEnd.Api.Controllers
         /// <remarks>
         /// Frontend usage: TBD
         /// </remarks>
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id, [FromBody] ScoreboardSendInputDto dto, CancellationToken cancellationToken)
         {

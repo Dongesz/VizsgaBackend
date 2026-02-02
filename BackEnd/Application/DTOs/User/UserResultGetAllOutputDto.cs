@@ -1,4 +1,4 @@
-﻿namespace BackEnd.Application.DTOs.User
+namespace BackEnd.Application.DTOs.User
 {
     public class UserResultGetAllOutputDto
     {
@@ -9,7 +9,7 @@
 
         public string? Bio { get; set; } = null;
 
-        public string UserType { get; set; } = null!;
+        public string? UserType { get; set; }
 
 
         public string ProfilePictureUrl { get; set; } = null;

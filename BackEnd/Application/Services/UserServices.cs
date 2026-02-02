@@ -1,10 +1,9 @@
-﻿using AutoMapper;
+using AutoMapper;
 using BackEnd.Application.DTOs;
 using BackEnd.Domain.Models;
 using BackEnd.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using BCrypt.Net;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -14,6 +13,9 @@ using System.Security.Cryptography.Xml;
 using Microsoft.AspNetCore.Connections;
 using BackEnd.Application.DTOs.User;
 using BackEnd.Application.Helpers;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text.Json;
 
 namespace BackEnd.Application.Services
 {
@@ -32,7 +34,7 @@ namespace BackEnd.Application.Services
             _pictureHelper = pictureHelper;
         }
 
-       
+
         public async Task<ResponseOutputDto> GetAllAsync(CancellationToken cancellationToken = default)
         {
             var users = await _context.Users.ToListAsync(cancellationToken);
@@ -48,17 +50,17 @@ namespace BackEnd.Application.Services
                 result.Add(dto);
             }
 
-            return new ResponseOutputDto { Message = "Successful fetch!", Success = true, Result = result};
+            return new ResponseOutputDto { Message = "Successful fetch!", Success = true, Result = result };
         }
         public async Task<ResponseOutputDto> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
-            if (user == null) return new ResponseOutputDto { Message = "User not found!", Success = false};
+            if (user == null) return new ResponseOutputDto { Message = "User not found!", Success = false };
 
             var dto = _mapper.Map<UsersGetOutputDto>(user);
             dto.ProfilePictureUrl = await _pictureHelper.GetProfilePictureUrlAsync(user.Id);
 
-            return  new ResponseOutputDto { Message = "Successful fetch!", Success = true, Result = dto};  
+            return new ResponseOutputDto { Message = "Successful fetch!", Success = true, Result = dto };
         }
         public async Task<ResponseOutputDto> DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
@@ -77,7 +79,7 @@ namespace BackEnd.Application.Services
         public async Task<ResponseOutputDto> GetUserCountAsync(CancellationToken cancellationToken = default)
         {
             int? count = await _context.Users.CountAsync(cancellationToken);
-            if (count == null) return new ResponseOutputDto { Message = "Couldn't fetch player count!", Success = false};
+            if (count == null) return new ResponseOutputDto { Message = "Couldn't fetch player count!", Success = false };
             var playerCount = new UserCountOutputDto
             {
                 PlayerCount = count
@@ -168,7 +170,66 @@ namespace BackEnd.Application.Services
                 await _context.SaveChangesAsync();
                 return new ResponseOutputDto { Message = "Custom picture uploaded successfully!", Success = true, Result = result.Result };
             }
-            return new ResponseOutputDto { Message = "Some error occured during file upload!", Success = false, Result = result.Result};
+            return new ResponseOutputDto { Message = "Some error occured during file upload!", Success = false, Result = result.Result };
+        }
+
+
+        public async Task<ResponseOutputDto> GetMeAsync(ClaimsPrincipal userClaims, CancellationToken cancellationToken = default)
+        {
+            var user = await EnsureUserExistsAsync(userClaims, cancellationToken);
+            var dto = _mapper.Map<UsersGetOutputDto>(user);
+            dto.ProfilePictureUrl = await _pictureHelper.GetProfilePictureUrlAsync(user.Id);
+            return new ResponseOutputDto { Message = "OK", Success = true, Result = dto };
+        }
+
+        public async Task<User> EnsureUserExistsAsync(
+      ClaimsPrincipal userClaims,
+      CancellationToken cancellationToken = default)
+        {
+            var authUserId =
+                userClaims.FindFirst(JwtRegisteredClaimNames.Sub)?.Value ??
+                userClaims.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrWhiteSpace(authUserId))
+                throw new Exception("JWT does not contain sub / nameidentifier claim");
+
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.AuthUserId == authUserId, cancellationToken);
+
+            if (user != null)
+                return user;
+
+            var username =
+                userClaims.FindFirst(JwtRegisteredClaimNames.UniqueName)?.Value
+                ?? userClaims.FindFirst(ClaimTypes.Name)?.Value
+                ?? userClaims.Identity?.Name
+                ?? "New player";
+
+            user = new User
+            {
+                AuthUserId = authUserId,
+                Name = username,
+                Email = "",
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync(cancellationToken);
+
+            var scoreboard = new Scoreboard
+            {
+                UserId = user.Id,
+                TotalScore = 0,
+                TotalXp = 0,
+                LastUpdated = DateTime.UtcNow
+            };
+
+            _context.Scoreboards.Add(scoreboard);
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return user;
         }
     }
 }

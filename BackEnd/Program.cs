@@ -2,69 +2,108 @@ using BackEnd.Application.Helpers;
 using BackEnd.Application.Mappers;
 using BackEnd.Application.Services;
 using BackEnd.Infrastructure.Database;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
+using System.Security.Claims;
+using System.Text;
 
-namespace BackEnd
+namespace BackEnd;
+
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
+        var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services.AddCors(options =>
         {
-            var builder = WebApplication.CreateBuilder(args);
-            
-            // Allow all cors, fejleszteshez megfelel, deployra javitani!
-            builder.Services.AddCors(options =>
+            options.AddPolicy("AllowAll", policy =>
             {
-                options.AddPolicy("AllowAll", policy =>
+                policy.AllowAnyOrigin()
+                      .AllowAnyMethod()
+                      .AllowAnyHeader();
+            });
+        });
+
+        builder.Services.AddControllers();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen(options =>
+        {
+            var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                Scheme = "Bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description = "{JWT token}"
+            });
+
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
                 {
-                    policy.AllowAnyOrigin()
-                          .AllowAnyMethod()
-                          .AllowAnyHeader();
-                });
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
             });
+        });
 
-
-
-            // kulso eleresi ut az apihoz
-
-            builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen(options =>
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
             {
-                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true,
+                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                    ValidAudience = builder.Configuration["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? "")),
+                    NameClaimType = JwtRegisteredClaimNames.UniqueName,
+                    RoleClaimType = ClaimTypes.Role,
+                    ClockSkew = TimeSpan.FromMinutes(2)
+                };
             });
 
+        builder.Services.AddAuthorization();
 
-            // Conn string lekerese, Dbcontext - Database kapcsolat felallitasa
-            var conn = builder.Configuration.GetConnectionString("DefaultConnection");
-            builder.Services.AddDbContext<DatabaseContext>(options =>
-                options.UseMySql(conn, ServerVersion.AutoDetect(conn)));
+        var conn = builder.Configuration.GetConnectionString("DefaultConnection");
+        builder.Services.AddDbContext<DatabaseContext>(options =>
+            options.UseMySql(conn, ServerVersion.AutoDetect(conn)));
 
-            // Seged osztalyok registralasa
-            builder.Services.AddScoped<UploadHelper>();
-            builder.Services.AddScoped<ProfilePictureHelper>();
-            builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
+        builder.Services.AddScoped<UploadHelper>();
+        builder.Services.AddScoped<ProfilePictureHelper>();
+        builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
+        builder.Services.AddScoped<IScoreboardService, ScoreboardServices>();
+        builder.Services.AddScoped<IUsersService, UsersService>();
 
-            // Interfacek registralasa (DI)
-            builder.Services.AddScoped<IScoreboardService, ScoreboardServices>();
-            builder.Services.AddScoped<IUsersService, UsersService>();
+        var app = builder.Build();
 
-            var app = builder.Build();
-
-            app.UsePathBase("/api");
-
-            // Cors aktivalasa
-            app.UseCors("AllowAll");
-            app.UseSwagger();
-            app.UseSwaggerUI();
-
-            app.UseAuthentication();
-            app.UseAuthorization();
-            app.MapControllers();
-
-            app.Run();
-        }
+        app.UsePathBase("/api");
+        app.UseRouting();
+        app.UseCors("AllowAll");
+        app.UseSwagger();
+        app.UseSwaggerUI();
+        app.UseAuthentication();
+        app.UseAuthorization();
+        app.MapControllers();
+        app.Run();
     }
+
 }

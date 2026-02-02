@@ -1,9 +1,8 @@
-﻿using BackEnd.Application.DTOs;
+using BackEnd.Application.DTOs;
 using BackEnd.Application.DTOs.User;
 using BackEnd.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,11 +13,10 @@ namespace BackEnd.Api.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUsersService _service;
-        private readonly ILogger<UsersController> _logger;
-        public UsersController(IUsersService service, ILogger<UsersController> logger)
+
+        public UsersController(IUsersService service)
         {
             _service = service;
-            _logger = logger;
         }
 
         /// <summary>
@@ -37,12 +35,10 @@ namespace BackEnd.Api.Controllers
             }
             catch (OperationCanceledException)
             {
-                _logger.LogInformation("GetAll users cancelled.");
                 return BadRequest("Request cancelled.");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "GetAll users failed.");
                 return Problem(detail: ex?.InnerException?.Message);
             }
         }
@@ -63,12 +59,10 @@ namespace BackEnd.Api.Controllers
             }
             catch (OperationCanceledException)
             {
-                _logger.LogInformation("GetById users cancelled.");
                 return BadRequest("Request cancelled.");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "GetById {Id} failed", id);
                 return Problem(detail: ex?.InnerException?.Message);
             }
         }
@@ -89,12 +83,10 @@ namespace BackEnd.Api.Controllers
             }
             catch (OperationCanceledException)
             {
-                _logger.LogInformation("Delete user cancelled.");
                 return BadRequest("Request cancelled.");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Delete {Id} failed", id);
                 return Problem(detail: ex?.InnerException?.Message);
             }
         }
@@ -116,12 +108,10 @@ namespace BackEnd.Api.Controllers
             }
             catch (OperationCanceledException)
             {
-                _logger.LogInformation("Get PlayerCount cancelled.");
                 return BadRequest("Request cancelled.");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Player count error: {ex?.InnerException?.Message}");
                 return Problem(detail: ex?.InnerException?.Message);
             }
         }
@@ -142,12 +132,10 @@ namespace BackEnd.Api.Controllers
             }
             catch (OperationCanceledException)
             {
-                _logger.LogInformation("Get Player-Score cancelled.");
                 return BadRequest("Request cancelled.");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"All Player Score by error: {ex?.InnerException?.Message}");
                 return Problem(detail: ex?.InnerException?.Message);
             }
         }
@@ -168,12 +156,10 @@ namespace BackEnd.Api.Controllers
             }
             catch (OperationCanceledException)
             {
-                _logger.LogInformation("Get Player-Result cancelled.");
                 return BadRequest("Request cancelled.");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Player-Result get all error: {ex?.InnerException?.Message}");
                 return Problem(detail: ex?.InnerException?.Message);
             }
         }
@@ -194,12 +180,10 @@ namespace BackEnd.Api.Controllers
             }
             catch (OperationCanceledException)
             {
-                _logger.LogInformation("User-Name-Update cancelled.");
                 return BadRequest("Request cancelled.");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"User-Name-Update error: {ex?.InnerException?.Message}");
                 return Problem(detail: ex?.InnerException?.Message);
             }
         }
@@ -221,12 +205,10 @@ namespace BackEnd.Api.Controllers
             }
             catch (OperationCanceledException)
             {
-                _logger.LogInformation("Player bio update cancelled.");
                 return BadRequest("Request cancelled.");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Player bio update by id error: {ex?.InnerException?.Message}");
                 return Problem(detail: ex?.InnerException?.Message);
             }
         }
@@ -248,14 +230,21 @@ namespace BackEnd.Api.Controllers
             }
             catch (OperationCanceledException)
             {
-                _logger.LogInformation("Profile picture get cancelled.");
                 return BadRequest("Profile picture get cancelled.");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Profile picture get error: {ex?.InnerException?.Message}");
                 return Problem(detail: ex?.InnerException?.Message);
             }
         }
+
+        [Authorize]
+        [HttpGet("me")]
+        public async Task<IActionResult> Me(CancellationToken cancellationToken)
+        {
+            var result = await _service.GetMeAsync(User, cancellationToken);
+            return Ok(result);
+        }
+
     }
 }

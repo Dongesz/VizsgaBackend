@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using BackEnd.Application.DTOs;
 using BackEnd.Application.DTOs.Scoreboard;
 using BackEnd.Domain.Models;
@@ -11,13 +11,11 @@ namespace BackEnd.Application.Services
     {
         private readonly DatabaseContext _context;
         private readonly IMapper _mapper;
-        private readonly ILogger<ScoreboardServices> _logger;
 
-        public ScoreboardServices(DatabaseContext context,IMapper mapper, ILogger<ScoreboardServices> logger)
+        public ScoreboardServices(DatabaseContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
-            _logger = logger;
         }
 
         public async Task<ResponseOutputDto> UpdateAsync(int id, ScoreboardSendInputDto dto, CancellationToken cancellationToken = default)

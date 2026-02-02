@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using BackEnd.Application.DTOs;
 using BackEnd.Application.DTOs.User;
+using BackEnd.Domain.Models;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace BackEnd.Application.Services
 {
@@ -24,5 +26,10 @@ namespace BackEnd.Application.Services
 
         // Profile Pictures
         Task<ResponseOutputDto> UploadCustomProfilePicture(int id, IFormFile file, CancellationToken cancellationToken = default);
+
+        Task<User> EnsureUserExistsAsync(ClaimsPrincipal userClaims, CancellationToken cancellationToken = default);
+
+        /// <summary>Current user as DTO (for /me). Avoids serializing entity with circular refs.</summary>
+        Task<ResponseOutputDto> GetMeAsync(ClaimsPrincipal userClaims, CancellationToken cancellationToken = default);
     }
 }

@@ -229,11 +229,14 @@ namespace BackEnd.Application.Services
                 ?? userClaims.Identity?.Name
                 ?? "New player";
 
+            var email =  userClaims.FindFirst(ClaimTypes.Email)?.Value
+                ?? "";
+
             user = new User
             {
                 AuthUserId = authUserId,
                 Name = username,
-                Email = "",
+                Email = email,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };

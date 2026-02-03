@@ -260,5 +260,3 @@ namespace BackEnd.Application.Services
         }
     }
 }
-
-

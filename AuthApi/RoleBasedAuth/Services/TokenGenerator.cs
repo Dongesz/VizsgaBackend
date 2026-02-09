@@ -28,6 +28,7 @@ namespace RoleBasedAuth.Services
                 new Claim(ClaimTypes.Name, applicationUser.UserName ?? ""),
                 new Claim(JwtRegisteredClaimNames.UniqueName, applicationUser.UserName ?? ""),
                 new Claim(ClaimTypes.Email, applicationUser.Email ?? ""),
+                new Claim(ClaimTypes.Role, roles.ToString() ?? "")
 
             };
 

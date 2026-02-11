@@ -34,14 +34,14 @@ namespace RoleBasedAuth.Services
                         _roleManager.CreateAsync(new IdentityRole(dto.RoleName)).GetAwaiter().GetResult();
                     }
                     await _userManager.AddToRoleAsync(user, dto.RoleName);
-                    return new { result = user, message = "sikeres hozzarendeles!" };
+                    return new { result = user, message = "Role successfully asigned!", success = true };
                 }
-                return new { result = "", message = "sikertelen hozzarendeles!" };
+                return new { result = "", message = "Failed to asign role!", success = false };
             }
             catch (Exception ex)
             {
 
-                return new { result = "", message = ex.Message };
+                return new { result = "", message = ex.Message, success = false };
                 
             }
           
@@ -53,14 +53,14 @@ namespace RoleBasedAuth.Services
 
             if (user == null)
             {
-                return new { message = "Hibás felhasználónév vagy jelszó" };
+                return new { message = "Invalid username or password!", success = false };
             }
 
             var isValidPassword = await _userManager.CheckPasswordAsync(user, dto.Password);
 
             if (!isValidPassword)
             {
-                return new { message = "Hibás felhasználónév vagy jelszó" };
+                return new { message = "Invalid password!", success = false };
             }
 
             var roles = await _userManager.GetRolesAsync(user);
@@ -74,7 +74,8 @@ namespace RoleBasedAuth.Services
                     user.UserName,
                     user.Email
                 },
-                token
+                token, 
+                success = true
             };
         }
 
@@ -94,7 +95,7 @@ namespace RoleBasedAuth.Services
                 {
                     var userReturn = await _context.ApplicationUsers.FirstOrDefaultAsync(x => x.UserName == registerRequestDto.UserName);
 
-                    return new { result = userReturn, message = "Sikeres Regisztracio!" };
+                    return new { result = userReturn, message = "Sikeres Regisztracio!", success = true };
                 }
 
                 return new { result = "", message = result.Errors.FirstOrDefault().Description };
@@ -102,7 +103,7 @@ namespace RoleBasedAuth.Services
 			catch (Exception ex)
             {
 
-                return new { result = "", message = ex.Message };
+                return new { result = "", message = ex.Message, success = false };
 
             }
         }

@@ -117,13 +117,16 @@ namespace BackEnd.Api.Controllers
         }
 
 
-        [Authorize]
         [HttpGet("count")]
+        [AllowAnonymous]
         public async Task<IActionResult> PlayerCount(CancellationToken cancellationToken)
         {
             try
             {
-                await _service.EnsureUserExistsAsync(User, cancellationToken);
+                if (User.Identity?.IsAuthenticated == true)
+                {
+                    await _service.EnsureUserExistsAsync(User, cancellationToken);
+                }
                 var result = await _service.GetUserCountAsync(cancellationToken);
                 return Ok(result);
             }
@@ -137,13 +140,16 @@ namespace BackEnd.Api.Controllers
             }
         }
 
-        [Authorize]
         [HttpGet("scoreboard")]
+        [AllowAnonymous]
         public async Task<IActionResult> UserScoreboardAll(CancellationToken cancellationToken)
         {
             try
             {
-                await _service.EnsureUserExistsAsync(User, cancellationToken);
+                if (User.Identity?.IsAuthenticated == true)
+                {
+                    await _service.EnsureUserExistsAsync(User, cancellationToken);
+                }
                 var result = await _service.GetAllUserScoreboardAsync(cancellationToken);
                 return Ok(result);
             }
@@ -159,14 +165,17 @@ namespace BackEnd.Api.Controllers
 
         /// <summary>
         /// Get a specific player's result (e.g. for leaderboard detail).
-        /// </summary>
-        [Authorize]
+        /// </summary> 
         [HttpGet("{id:int}/result")]
+        [AllowAnonymous]  
         public async Task<IActionResult> UserResult(int id, CancellationToken cancellationToken)
         {
             try
             {
-                await _service.EnsureUserExistsAsync(User, cancellationToken);
+                if (User.Identity?.IsAuthenticated == true)
+                {
+                    await _service.EnsureUserExistsAsync(User, cancellationToken);
+                }
                 var result = await _service.GetByIdResultAsync(id, cancellationToken);
                 return Ok(result);
             }

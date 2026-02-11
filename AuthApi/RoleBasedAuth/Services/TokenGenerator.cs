@@ -26,7 +26,10 @@ namespace RoleBasedAuth.Services
             {
                 new Claim(ClaimTypes.NameIdentifier, applicationUser.Id),
                 new Claim(ClaimTypes.Name, applicationUser.UserName ?? ""),
-                new Claim(JwtRegisteredClaimNames.UniqueName, applicationUser.UserName ?? "")
+                new Claim(JwtRegisteredClaimNames.UniqueName, applicationUser.UserName ?? ""),
+                new Claim(ClaimTypes.Email, applicationUser.Email ?? ""),
+                new Claim(ClaimTypes.Role, roles.ToString() ?? "")
+
             };
 
             claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));

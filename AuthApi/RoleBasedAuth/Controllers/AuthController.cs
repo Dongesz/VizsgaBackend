@@ -21,6 +21,7 @@ namespace RoleBasedAuth.Controllers
             this.configuration = configuration;
         }
 
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterRequestDto dto)
         {
@@ -31,6 +32,7 @@ namespace RoleBasedAuth.Controllers
             }
             return BadRequest();
         }
+        [Authorize(Roles = "Admin")]
         [HttpPost("assignrole")]
         public async Task<IActionResult> AssignRole(AssignRoleDto dto)
         {
@@ -41,6 +43,7 @@ namespace RoleBasedAuth.Controllers
             }
             return BadRequest();
         }
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto dto)
         {

@@ -60,8 +60,14 @@ namespace RoleBasedAuth
                     ValidAudience = jwtOptions.Audience,
                     IssuerSigningKey = new SymmetricSecurityKey(
                         Encoding.UTF8.GetBytes(jwtOptions.Secret)
-                    )
+                    ),
+                    RoleClaimType = System.Security.Claims.ClaimTypes.Role
                 };
+            });
+
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
             });
 
             builder.Services.AddScoped<ITokenGenerator, TokenGenerator>();

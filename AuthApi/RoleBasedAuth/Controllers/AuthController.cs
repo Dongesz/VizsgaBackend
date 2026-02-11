@@ -1,7 +1,10 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RoleBasedAuth.Models.DTOs;
 using RoleBasedAuth.Services;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace RoleBasedAuth.Controllers
 {
@@ -64,6 +67,24 @@ namespace RoleBasedAuth.Controllers
             }
 
             var result = await auth.DeleteUserByIdAsync(authUserId);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Changes the password of the currently authenticated user. Requires current password.
+        /// </summary>
+        [Authorize]
+        [HttpPut("me/password")]
+        public async Task<IActionResult> ChangeMyPassword([FromBody] ChangePasswordDto dto, CancellationToken cancellationToken)
+        {
+            var userId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value
+                ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                return Unauthorized(new { message = "Invalid token: user id not found." });
+            }
+
+            var result = await auth.ChangePasswordAsync(userId, dto);
             return Ok(result);
         }
     }

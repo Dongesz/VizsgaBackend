@@ -16,5 +16,9 @@ namespace RoleBasedAuth.Services
         /// </summary>
         Task<object> DeleteUserByIdAsync(string authUserId);
 
+        /// <summary>
+        /// Changes the password for the user identified by userId. Requires current password.
+        /// </summary>
+        Task<object> ChangePasswordAsync(string userId, ChangePasswordDto dto);
     }
 }

@@ -137,5 +137,40 @@ namespace RoleBasedAuth.Services
                 return new { result = (object?)null, success = false, message = ex.Message };
             }
         }
+
+        public async Task<object> ChangePasswordAsync(string userId, ChangePasswordDto dto)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(userId))
+                {
+                    return new { success = false, message = "User id is required." };
+                }
+
+                if (string.IsNullOrWhiteSpace(dto?.CurrentPassword) || string.IsNullOrWhiteSpace(dto?.NewPassword))
+                {
+                    return new { success = false, message = "Current password and new password are required." };
+                }
+
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null)
+                {
+                    return new { success = false, message = "User not found." };
+                }
+
+                var result = await _userManager.ChangePasswordAsync(user, dto.CurrentPassword, dto.NewPassword);
+                if (result.Succeeded)
+                {
+                    return new { success = true, message = "Password changed successfully." };
+                }
+
+                var errorMessage = result.Errors.FirstOrDefault()?.Description ?? "Failed to change password.";
+                return new { success = false, message = errorMessage };
+            }
+            catch (Exception ex)
+            {
+                return new { success = false, message = ex.Message };
+            }
+        }
     }
 }

@@ -25,13 +25,15 @@ namespace BackEnd.Application.Services
         private readonly IMapper _mapper;
         private readonly UploadHelper _uploadHelper;
         private readonly ProfilePictureHelper _pictureHelper;
+        private readonly IAuthApiClient _authApiClient;
 
-        public UsersService(DatabaseContext context, IMapper mapper, UploadHelper uploadhelper, ProfilePictureHelper pictureHelper)
+        public UsersService(DatabaseContext context, IMapper mapper, UploadHelper uploadhelper, ProfilePictureHelper pictureHelper, IAuthApiClient authApiClient)
         {
             _context = context;
             _mapper = mapper;
             _uploadHelper = uploadhelper;
             _pictureHelper = pictureHelper;
+            _authApiClient = authApiClient;
         }
 
 
@@ -204,6 +206,42 @@ namespace BackEnd.Application.Services
         {
             var user = await EnsureUserExistsAsync(userClaims, cancellationToken);
             return await UploadCustomProfilePicture(user.Id, file, cancellationToken);
+        }
+
+        public async Task<ResponseOutputDto> DeleteMeAsync(ClaimsPrincipal userClaims, CancellationToken cancellationToken = default)
+        {
+            // Resolve current user from JWT and local database
+            var user = await EnsureUserExistsAsync(userClaims, cancellationToken);
+
+            // First, ask AuthApi to delete the underlying Identity user
+            var deletedInAuth = await _authApiClient.DeleteIdentityUserAsync(user.AuthUserId, cancellationToken);
+            if (!deletedInAuth)
+            {
+                return new ResponseOutputDto
+                {
+                    Message = "Failed to delete Identity user in AuthApi.",
+                    Success = false
+                };
+            }
+
+            // Then delete related scoreboard and local user record
+            var scores = await _context.Scoreboards
+                .Where(s => s.UserId == user.Id)
+                .ToListAsync(cancellationToken);
+
+            if (scores.Count > 0)
+            {
+                _context.Scoreboards.RemoveRange(scores);
+            }
+
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return new ResponseOutputDto
+            {
+                Message = "Account deleted successfully.",
+                Success = true
+            };
         }
 
         public async Task<User> EnsureUserExistsAsync(

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.AspNetCore.Identity.Data;
 using RoleBasedAuth.Models.DTOs;
 
 namespace RoleBasedAuth.Services
@@ -8,6 +8,13 @@ namespace RoleBasedAuth.Services
         Task<object> Register(RegisterRequestDto dto);
         Task<object> AssignRole(AssignRoleDto dto);
         Task<object> Login(LoginDto dto);
+
+        /// <summary>
+        /// Permanently deletes an Identity user by their AuthUserId.
+        /// Used by the BackEnd when a player deletes their account.
+        /// Returns an anonymous object with success flag and message.
+        /// </summary>
+        Task<object> DeleteUserByIdAsync(string authUserId);
 
     }
 }

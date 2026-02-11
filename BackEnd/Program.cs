@@ -96,6 +96,7 @@ public class Program
         builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
         builder.Services.AddScoped<IScoreboardService, ScoreboardServices>();
         builder.Services.AddScoped<IUsersService, UsersService>();
+        builder.Services.AddHttpClient<IAuthApiClient, AuthApiClient>();
 
         var app = builder.Build();
 

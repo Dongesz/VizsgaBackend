@@ -179,5 +179,33 @@ namespace BackEnd.Api.Controllers
                 return Problem(detail: ex?.InnerException?.Message);
             }
         }
+
+        /// <summary>
+        /// Deletes the currently authenticated user's account (/users/me).
+        /// This removes both the local user data and the underlying Identity user in the AuthApi.
+        /// </summary>
+        [Authorize]
+        [HttpDelete("me")]
+        public async Task<IActionResult> DeleteMe(CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _service.DeleteMeAsync(User, cancellationToken);
+                if (result.Success == null)
+                {
+                    return BadRequest(result);
+                }
+
+                return Ok(result);
+            }
+            catch (OperationCanceledException)
+            {
+                return BadRequest("Request cancelled.");
+            }
+            catch (Exception ex)
+            {
+                return Problem(detail: ex?.InnerException?.Message ?? ex.Message);
+            }
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using MySqlX.XDevAPI.Common;
@@ -104,6 +104,36 @@ namespace RoleBasedAuth.Services
 
                 return new { result = "", message = ex.Message };
 
+            }
+        }
+
+        public async Task<object> DeleteUserByIdAsync(string authUserId)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(authUserId))
+                {
+                    return new { result = (object?)null, success = false, message = "Invalid auth user id." };
+                }
+
+                var user = await _userManager.FindByIdAsync(authUserId);
+                if (user == null)
+                {
+                    return new { result = (object?)null, success = false, message = "User not found." };
+                }
+
+                var result = await _userManager.DeleteAsync(user);
+                if (result.Succeeded)
+                {
+                    return new { result = (object?)null, success = true, message = "User deleted successfully." };
+                }
+
+                var errorMessage = result.Errors.FirstOrDefault()?.Description ?? "Unknown error during delete.";
+                return new { result = (object?)null, success = false, message = errorMessage };
+            }
+            catch (Exception ex)
+            {
+                return new { result = (object?)null, success = false, message = ex.Message };
             }
         }
     }

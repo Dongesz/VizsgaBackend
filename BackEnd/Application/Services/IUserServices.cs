@@ -37,5 +37,11 @@ namespace BackEnd.Application.Services
 
         /// <summary>Current user's detailed result (for /me/result).</summary>
         Task<ResponseOutputDto> GetMyResultAsync(ClaimsPrincipal userClaims, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Deletes the currently authenticated user and their related data,
+        /// including the underlying Identity user in the AuthApi.
+        /// </summary>
+        Task<ResponseOutputDto> DeleteMeAsync(ClaimsPrincipal userClaims, CancellationToken cancellationToken = default);
     }
 }

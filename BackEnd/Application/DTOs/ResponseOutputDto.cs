@@ -1,4 +1,4 @@
-﻿namespace BackEnd.Application.DTOs
+namespace BackEnd.Application.DTOs
 {
     public class ResponseOutputDto
     {

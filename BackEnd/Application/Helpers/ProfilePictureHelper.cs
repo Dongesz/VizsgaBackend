@@ -1,4 +1,4 @@
-﻿using BackEnd.Infrastructure.Database;
+using BackEnd.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using System;
 

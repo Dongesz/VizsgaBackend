@@ -1,4 +1,4 @@
-﻿namespace BackEnd.Application.DTOs.User
+namespace BackEnd.Application.DTOs.User
 {
     public class UserCountOutputDto
     {

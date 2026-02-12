@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace BackEnd.Api.Controllers
 {
+    /// <summary>Ranglista végpontok: bejelentkezett felhasználó ranglistájának frissítése.</summary>
     [ApiController]
     [Route("[controller]")]
     public class ScoreboardController : ControllerBase
@@ -20,9 +21,7 @@ namespace BackEnd.Api.Controllers
             _usersService = usersService;
         }
 
-        /// <summary>
-        /// Update current user's scoreboard. Identity from JWT only.
-        /// </summary>
+        /// <summary>Bejelentkezett felhasználó ranglistájának frissítése (JWT alapján).</summary>
         [Authorize]
         [HttpPut("me")]
         public async Task<IActionResult> UpdateMyScoreboard([FromBody] ScoreboardSendInputDto dto, CancellationToken cancellationToken)

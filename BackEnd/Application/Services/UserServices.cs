@@ -175,6 +175,38 @@ namespace BackEnd.Application.Services
             return new ResponseOutputDto { Message = "Some error occured during file upload!", Success = false, Result = result.Result };
         }
 
+        public async Task<ResponseOutputDto> UpdateUserProfileAsync(int id, AdminProfileUpdateInputDto dto, CancellationToken cancellationToken = default)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            if (user == null) return new ResponseOutputDto { Message = "User not found!", Success = false };
+
+            if (dto.Name != null)
+                user.Name = dto.Name;
+            if (dto.Email != null)
+                user.Email = dto.Email;
+            if (dto.Bio != null)
+                user.Bio = dto.Bio;
+
+            if (dto.ProfilePicture != null)
+            {
+                string? existingFileName = user.CustomPictureUrl;
+                string rootPath = Directory.GetCurrentDirectory();
+                var result = await _uploadHelper.UploadFileAsync(dto.ProfilePicture, rootPath, existingFileName);
+                if (result.Success == true && result.Result != null)
+                {
+                    user.CustomPictureUrl = result.Result.ToString();
+                }
+                else
+                {
+                    return new ResponseOutputDto { Message = "Profile picture upload failed.", Success = false, Result = result.Result };
+                }
+            }
+
+            user.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return new ResponseOutputDto { Message = "Profile updated successfully!", Success = true };
+        }
 
         public async Task<ResponseOutputDto> GetMeAsync(ClaimsPrincipal userClaims, CancellationToken cancellationToken = default)
         {

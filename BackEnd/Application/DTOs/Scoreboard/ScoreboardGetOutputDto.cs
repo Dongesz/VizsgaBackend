@@ -1,4 +1,4 @@
-﻿namespace BackEnd.Application.DTOs.Scoreboard
+namespace BackEnd.Application.DTOs.Scoreboard
 {
     // Data transfer az adatok lekeresehez
     public class ScoreboardGetOutputDto

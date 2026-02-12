@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using BackEnd.Application.DTOs;
 using BackEnd.Application.DTOs.Scoreboard;
 using BackEnd.Application.DTOs.User;

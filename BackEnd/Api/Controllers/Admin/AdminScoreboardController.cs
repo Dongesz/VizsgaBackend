@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace BackEnd.Api.Controllers.Admin
 {
+    /// <summary>Admin ranglistakezelő: bármely felhasználó ranglistájának frissítése azonosító alapján.</summary>
     [ApiController]
     [Route("Admin/Scoreboard")]
     [Authorize(Roles = "Admin")]
@@ -19,9 +20,7 @@ namespace BackEnd.Api.Controllers.Admin
             _service = service;
         }
 
-        /// <summary>
-        /// Admin: update any user's scoreboard by scoreboard id.
-        /// </summary>
+        /// <summary>Ranglista frissítése ranglista-azonosító alapján.</summary>
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id, [FromBody] ScoreboardSendInputDto dto, CancellationToken cancellationToken)
         {

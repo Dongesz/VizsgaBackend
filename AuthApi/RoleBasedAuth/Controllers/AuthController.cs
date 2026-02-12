@@ -21,6 +21,7 @@ namespace RoleBasedAuth.Controllers
             this.configuration = configuration;
         }
 
+        /// <summary>Új felhasználó regisztrálása (névtelen).</summary>
         [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterRequestDto dto)
@@ -32,6 +33,8 @@ namespace RoleBasedAuth.Controllers
             }
             return BadRequest();
         }
+
+        /// <summary>Szerepkör kiosztása felhasználónak (csak Admin).</summary>
         [Authorize(Roles = "Admin")]
         [HttpPost("assignrole")]
         public async Task<IActionResult> AssignRole(AssignRoleDto dto)
@@ -43,11 +46,15 @@ namespace RoleBasedAuth.Controllers
             }
             return BadRequest();
         }
+
+        /// <summary>Bejelentkezés: e-mail és jelszó, JWT válasz (névtelen).</summary>
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginDto dto)
+        public async Task<IActionResult> Login([FromBody] LoginDto request)
         {
-            var user = await auth.Login(dto);
+            if (request == null)
+                return BadRequest("Request body (userName, password) is required.");
+            var user = await auth.Login(request);
             if (user != null)
             {
                 return StatusCode(201, user);
@@ -55,11 +62,7 @@ namespace RoleBasedAuth.Controllers
             return BadRequest();
         }
 
-        /// <summary>
-        /// Deletes an Identity user by their id.
-        /// Intended for internal use from the BackEnd when a player deletes their account.
-        /// Protected by an internal API key configured in AuthSettings:InternalApiKey.
-        /// </summary>
+        /// <summary>Identity felhasználó törlése azonosító alapján. Belső használat (BackEnd), X-Internal-Api-Key header kell.</summary>
         [HttpDelete("users/{authUserId}")]
         public async Task<IActionResult> DeleteIdentityUser(string authUserId, [FromHeader(Name = "X-Internal-Api-Key")] string? apiKey)
         {
@@ -73,9 +76,7 @@ namespace RoleBasedAuth.Controllers
             return Ok(result);
         }
 
-        /// <summary>
-        /// Changes the password of the currently authenticated user. Requires current password.
-        /// </summary>
+        /// <summary>Bejelentkezett felhasználó jelszavának megváltoztatása (régi jelszó szükséges).</summary>
         [Authorize]
         [HttpPut("me/password")]
         public async Task<IActionResult> ChangeMyPassword([FromBody] ChangePasswordDto dto, CancellationToken cancellationToken)

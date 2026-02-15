@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace BackEnd.Api.Controllers.Admin
 {
-    /// <summary>Admin felhasználókezelő: listázás, lekérés, törlés, név/bio/profilkép frissítés.</summary>
     [ApiController]
     [Route("Admin/Users")]
     [Authorize(Roles = "Admin")]
@@ -117,7 +116,7 @@ namespace BackEnd.Api.Controllers.Admin
         }
 
         /// <summary>Felhasználó egyéni profilképének feltöltése.</summary>
-        [RequestSizeLimit(10_485_760)] // 10 MB
+        [RequestSizeLimit(10_485_760)] 
         [HttpPost("{id:int}/profile-picture")]
         public async Task<IActionResult> UploadProfilePicture(int id, IFormFile file, CancellationToken cancellationToken = default)
         {
@@ -136,8 +135,8 @@ namespace BackEnd.Api.Controllers.Admin
             }
         }
 
-        /// <summary>Admin: a felhasználó nevét, e-mailjét, bióját és profilképét egyszerre módosítja (multipart/form-data: name, email, bio, profilePicture).</summary>
-        [RequestSizeLimit(10_485_760)] // 10 MB (profilkép)
+        /// <summary>Felhasználó nevét, e-mailjét, bióját és profilképét egyszerre módosítja.</summary>
+        [RequestSizeLimit(10_485_760)]
         [HttpPut("{id:int}/profile")]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> UpdateProfile(int id, [FromForm] AdminProfileUpdateInputDto? dto, CancellationToken cancellationToken = default)

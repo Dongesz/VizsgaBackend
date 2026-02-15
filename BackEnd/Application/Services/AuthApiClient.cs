@@ -6,10 +6,6 @@ using Microsoft.Extensions.Configuration;
 
 namespace BackEnd.Application.Services
 {
-    /// <summary>
-    /// Default HTTP-based implementation of <see cref="IAuthApiClient"/>.
-    /// Uses configuration section AuthApi:BaseUrl and AuthApi:InternalApiKey.
-    /// </summary>
     public class AuthApiClient : IAuthApiClient
     {
         private readonly HttpClient _httpClient;
@@ -41,7 +37,6 @@ namespace BackEnd.Application.Services
                 throw new InvalidOperationException("AuthApi:InternalApiKey is not configured.");
             }
 
-            // Ensure base address
             if (_httpClient.BaseAddress == null)
             {
                 _httpClient.BaseAddress = new Uri(baseUrl);

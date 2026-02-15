@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace BackEnd.Api.Controllers
 {
-    /// <summary>Felhasználói végpontok: saját profil, ranglista, játékoslétszám, eredmények.</summary>
     [ApiController]
     [Route("[controller]")]
     public class UsersController : ControllerBase
@@ -40,7 +39,7 @@ namespace BackEnd.Api.Controllers
             }
         }
 
-        /// <summary>Bejelentkezett felhasználó részletes eredménye (ranglista, XP, stb.).</summary>
+        /// <summary>Bejelentkezett felhasználó részletes eredménye.</summary>
         [Authorize]
         [HttpGet("me/result")]
         public async Task<IActionResult> MeResult(CancellationToken cancellationToken)
@@ -102,7 +101,7 @@ namespace BackEnd.Api.Controllers
         }
 
         /// <summary>Saját profilkép feltöltése.</summary>
-        [RequestSizeLimit(10_485_760)] // 10 MB
+        [RequestSizeLimit(10_485_760)] 
         [Authorize]
         [HttpPost("me/profile-picture")]
         public async Task<IActionResult> UploadMyProfilePicture(IFormFile file, CancellationToken cancellationToken = default)
@@ -122,7 +121,7 @@ namespace BackEnd.Api.Controllers
             }
         }
 
-        /// <summary>Játékosok számának lekérése (névtelen is elérhető).</summary>
+        /// <summary>Játékosok számának lekérése.</summary>
         [HttpGet("count")]
         [AllowAnonymous]
         public async Task<IActionResult> PlayerCount(CancellationToken cancellationToken)
@@ -146,7 +145,7 @@ namespace BackEnd.Api.Controllers
             }
         }
 
-        /// <summary>Összes felhasználó ranglistája (névtelen is elérhető).</summary>
+        /// <summary>Összes felhasználó ranglistája.</summary>
         [HttpGet("scoreboard")]
         [AllowAnonymous]
         public async Task<IActionResult> UserScoreboardAll(CancellationToken cancellationToken)
@@ -170,7 +169,7 @@ namespace BackEnd.Api.Controllers
             }
         }
 
-        /// <summary>Egy adott játékos eredményének lekérése (pl. ranglista részletezés).</summary>
+        /// <summary>Egy adott játékos eredményének lekérése.</summary>
         [HttpGet("{id:int}/result")]
         [AllowAnonymous]  
         public async Task<IActionResult> UserResult(int id, CancellationToken cancellationToken)
@@ -194,7 +193,7 @@ namespace BackEnd.Api.Controllers
             }
         }
 
-        /// <summary>Bejelentkezett felhasználó fiókjának törlése (lokális adat + AuthApi Identity).</summary>
+        /// <summary>Bejelentkezett felhasználó fiókjának törlése.</summary>
         [Authorize]
         [HttpDelete("me")]
         public async Task<IActionResult> DeleteMe(CancellationToken cancellationToken)

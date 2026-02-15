@@ -33,7 +33,7 @@ public class Program
         builder.Services.AddControllers();
         builder.Services.Configure<FormOptions>(options =>
         {
-            options.MultipartBodyLengthLimit = 10 * 1024 * 1024; // 10 MB (képfeltöltéshez)
+            options.MultipartBodyLengthLimit = 10 * 1024 * 1024; // 10 MB képfeltöltéshez
         });
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options =>

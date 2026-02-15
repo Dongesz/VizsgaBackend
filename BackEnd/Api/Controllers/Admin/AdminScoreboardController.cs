@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace BackEnd.Api.Controllers.Admin
 {
-    /// <summary>Admin ranglistakezelő: bármely felhasználó ranglistájának frissítése azonosító alapján.</summary>
     [ApiController]
     [Route("Admin/Scoreboard")]
     [Authorize(Roles = "Admin")]

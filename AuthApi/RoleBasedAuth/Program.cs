@@ -28,7 +28,6 @@ namespace RoleBasedAuth
                 });
             });
 
-            // Add services to the container.
 
             builder.Services.AddControllers();
             builder.Services.AddDbContext<AppDbContext>(x =>
@@ -105,7 +104,6 @@ namespace RoleBasedAuth
             var app = builder.Build();
 
             app.UseCors("AllowAll");
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();

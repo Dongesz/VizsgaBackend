@@ -36,7 +36,6 @@ namespace BackEnd.Application.Services
             _authApiClient = authApiClient;
         }
 
-
         public async Task<ResponseOutputDto> GetAllAsync(CancellationToken cancellationToken = default)
         {
             var users = await _context.Users.ToListAsync(cancellationToken);

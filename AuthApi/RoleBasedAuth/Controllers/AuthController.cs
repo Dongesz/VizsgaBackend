@@ -21,7 +21,7 @@ namespace RoleBasedAuth.Controllers
             this.configuration = configuration;
         }
 
-        /// <summary>Új felhasználó regisztrálása (névtelen).</summary>
+        /// <summary>Új felhasználó regisztrálása.</summary>
         [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterRequestDto dto)
@@ -34,7 +34,7 @@ namespace RoleBasedAuth.Controllers
             return BadRequest();
         }
 
-        /// <summary>Szerepkör kiosztása felhasználónak (csak Admin).</summary>
+        /// <summary>Szerepkör kiosztása felhasználónak.</summary>
         [Authorize(Roles = "Admin")]
         [HttpPost("assignrole")]
         public async Task<IActionResult> AssignRole(AssignRoleDto dto)
@@ -47,7 +47,7 @@ namespace RoleBasedAuth.Controllers
             return BadRequest();
         }
 
-        /// <summary>Bejelentkezés: e-mail és jelszó, JWT válasz (névtelen).</summary>
+        /// <summary>Bejelentkezés: e-mail és jelszó alapján.</summary>
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto request)
@@ -62,7 +62,7 @@ namespace RoleBasedAuth.Controllers
             return BadRequest();
         }
 
-        /// <summary>Identity felhasználó törlése azonosító alapján. Belső használat (BackEnd), X-Internal-Api-Key header kell.</summary>
+        /// <summary>Identity felhasználó törlése azonosító alapján. Belső használat (X-Internal-Api-Key header kell!!!)</summary>
         [HttpDelete("users/{authUserId}")]
         public async Task<IActionResult> DeleteIdentityUser(string authUserId, [FromHeader(Name = "X-Internal-Api-Key")] string? apiKey)
         {
@@ -76,7 +76,7 @@ namespace RoleBasedAuth.Controllers
             return Ok(result);
         }
 
-        /// <summary>Bejelentkezett felhasználó jelszavának megváltoztatása (régi jelszó szükséges).</summary>
+        /// <summary>Bejelentkezett felhasználó jelszavának megváltoztatása.</summary>
         [Authorize]
         [HttpPut("me/password")]
         public async Task<IActionResult> ChangeMyPassword([FromBody] ChangePasswordDto dto, CancellationToken cancellationToken)

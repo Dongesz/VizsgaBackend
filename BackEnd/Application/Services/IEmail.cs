@@ -4,6 +4,6 @@ namespace BackEnd.Application.Services
 {
     public interface IEmail
     {
-        void SendMail(SendEmailDto dto);
+        Task<ResponseOutputDto> SendMail(SendEmailDto dto);
     }
 }

@@ -1,4 +1,5 @@
-﻿using BackEnd.Application.DTOs;
+﻿using System.Threading;
+using BackEnd.Application.DTOs;
 using BackEnd.Application.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,11 +16,23 @@ namespace BackEnd.Api.Controllers
             this._email = email;
         }
 
+        /// <summary>Email küldés custom bodyval.</summary>
         [HttpPost]
-        public ActionResult SendEmail(SendEmailDto dto)
+        public async Task<IActionResult> SendEmail(SendEmailDto dto)
         {
-            _email.SendMail(dto);
-            return Ok(new { message = "Sikeres email kuldes" });
+            try
+            {
+                var email = await _email.SendMail(dto);
+                return Ok(email);
+            }
+            catch (OperationCanceledException)
+            {
+                return BadRequest("Request cancelled.");
+            }
+            catch (Exception ex)
+            {
+                return Problem(detail: ex?.InnerException?.Message);
+            }
         }
     }
 }

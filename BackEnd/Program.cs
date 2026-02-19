@@ -11,6 +11,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace BackEnd;
 
@@ -96,6 +97,7 @@ public class Program
         builder.Services.AddDbContext<DatabaseContext>(options =>
             options.UseMySql(conn, ServerVersion.AutoDetect(conn)));
 
+        builder.Services.AddScoped<IEmail, Email>();
         builder.Services.AddScoped<UploadHelper>();
         builder.Services.AddScoped<ProfilePictureHelper>();
         builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);

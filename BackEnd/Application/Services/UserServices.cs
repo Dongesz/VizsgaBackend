@@ -241,10 +241,8 @@ namespace BackEnd.Application.Services
 
         public async Task<ResponseOutputDto> DeleteMeAsync(ClaimsPrincipal userClaims, CancellationToken cancellationToken = default)
         {
-            // Resolve current user from JWT and local database
             var user = await EnsureUserExistsAsync(userClaims, cancellationToken);
 
-            // First, ask AuthApi to delete the underlying Identity user
             var deletedInAuth = await _authApiClient.DeleteIdentityUserAsync(user.AuthUserId, cancellationToken);
             if (!deletedInAuth)
             {
@@ -255,7 +253,6 @@ namespace BackEnd.Application.Services
                 };
             }
 
-            // Then delete related scoreboard and local user record
             var scores = await _context.Scoreboards
                 .Where(s => s.UserId == user.Id)
                 .ToListAsync(cancellationToken);

@@ -17,8 +17,6 @@ namespace BackEnd.Application.Helpers
 
             var fileName = Guid.NewGuid() + ext;
             var path = Path.Combine(rootPath, "images");
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
 
             if (!string.IsNullOrEmpty(existingFileName))
             {

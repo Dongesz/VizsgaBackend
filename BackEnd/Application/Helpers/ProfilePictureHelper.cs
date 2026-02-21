@@ -34,7 +34,6 @@ namespace BackEnd.Application.Helpers
                 if (pic != null)
                     return pic.DefaultPictureUrl; 
             }
-
             return null;
         }
     }

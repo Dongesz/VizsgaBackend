@@ -15,20 +15,16 @@ public partial class DatabaseContext : DbContext
     {
     }
 
-    // Dbsetek - database tablak reprezentalasa
     public virtual DbSet<Scoreboard> Scoreboards { get; set; }
     public virtual DbSet<User> Users { get; set; }
     public virtual DbSet<DefaultPicture> DefaultPictures { get; set; }
 
-    // Ez a metodus leirja hogy milyen formaban forditsa majd sql codera az entitast az EF. Pl tablak felepitese, kapcsolatai, mezok nevei, tulajdonsagai stb.
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Alapveto beallitasok pl.charset
         modelBuilder
             .UseCollation("utf8mb4_hungarian_ci")
             .HasCharSet("utf8mb4");
         
-        // Adat tablak migraciojanak beallitasai
         modelBuilder.Entity<User>(b =>
         {
             b.ToTable("Users");

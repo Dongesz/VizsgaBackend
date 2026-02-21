@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 namespace BackEnd.Domain.Models;
 
-// Egyszeru adat osztaly, a DbContext ezt koti ossze az adatbazis megfelelo osztalyaval
 public partial class Scoreboard
 {
     public int Id { get; set; }

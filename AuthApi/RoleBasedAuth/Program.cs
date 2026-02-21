@@ -28,7 +28,6 @@ namespace RoleBasedAuth
                 });
             });
 
-
             builder.Services.AddControllers();
             builder.Services.AddDbContext<AppDbContext>(x =>
             {
@@ -108,12 +107,10 @@ namespace RoleBasedAuth
             app.UseSwagger();
             app.UseSwaggerUI();
      
-            
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 

@@ -7,10 +7,8 @@ namespace RoleBasedAuth.Services
     {
         Task<object> Register(RegisterRequestDto dto);
         Task<object> AssignRole(AssignRoleDto dto);
-        Task<object> Login(LoginDto dto);
-       
+        Task<object> Login(LoginDto dto);     
         Task<object> DeleteUserByIdAsync(string authUserId);
-
         Task<object> ChangePasswordAsync(string userId, ChangePasswordDto dto);
     }
 }

@@ -8,7 +8,6 @@ using System.Security.Claims;
 
 namespace RoleBasedAuth.Controllers
 {
-    
     [ApiController]
     public class AuthController : ControllerBase
     {

@@ -32,7 +32,7 @@ namespace RoleBasedAuth
             builder.Services.AddControllers();
             builder.Services.AddDbContext<AppDbContext>(x =>
             {
-                x.UseMySQL(builder.Configuration.GetConnectionString("MySql"));
+                x.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
             builder.Services.AddScoped<IAuth, Auth>();
@@ -104,12 +104,11 @@ namespace RoleBasedAuth
             var app = builder.Build();
 
             app.UseCors("AllowAll");
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
+            app.UsePathBase("/api/auth");
+            app.UseSwagger();
+            app.UseSwaggerUI();
+     
+            
             app.UseHttpsRedirection();
 
             app.UseAuthentication();

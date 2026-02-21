@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace RoleBasedAuth.Controllers
 {
-    [Route("api/[controller]")]
+    
     [ApiController]
     public class AuthController : ControllerBase
     {

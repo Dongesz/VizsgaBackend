@@ -15,4 +15,4 @@ COPY --from=build /app/out ./
 
 EXPOSE 5000
 
-ENTRYPOINT ["dotnet", "BackEnd.dll"]
+ENTRYPOINT ["dotnet", "RoleBasedAuth.dll"]

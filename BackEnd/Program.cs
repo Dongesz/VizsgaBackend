@@ -107,7 +107,7 @@ public class Program
 
         var app = builder.Build();
 
-        app.UsePathBase("/api");
+        app.UsePathBase("/api/main");
         app.UseRouting();
         app.UseCors("AllowAll");
         app.UseSwagger();

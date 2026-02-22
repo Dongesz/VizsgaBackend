@@ -19,6 +19,26 @@ namespace RoleBasedAuth.Controllers
             this.auth = auth;
         }
 
+        /// <summary>Bejelentkezett felhasználó jelszavának ellenőrzése.</summary>
+        [HttpPost("me/checkpassword")]
+        public async Task<IActionResult> CheckPassword([FromBody] CheckPasswordDto dto, CancellationToken cancellationToken)
+        {
+            var userId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value
+                ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                return Unauthorized(new { message = "Invalid token: user id not found." });
+            }
+
+            if (string.IsNullOrWhiteSpace(dto?.Password))
+            {
+                return BadRequest(new { success = false, message = "Password is required." });
+            }
+
+            var result = await auth.CheckPasswordAsync(userId, dto.Password);
+            return Ok(result);
+        }
+
         /// <summary>Bejelentkezett felhasználó jelszavának megváltoztatása.</summary>
         [HttpPut("me/password")]
         public async Task<IActionResult> ChangeMyPassword([FromBody] ChangePasswordDto dto, CancellationToken cancellationToken)

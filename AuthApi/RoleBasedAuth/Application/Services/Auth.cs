@@ -42,9 +42,7 @@ namespace RoleBasedAuth.Services
             {
 
                 return new { result = "", message = ex.Message, success = false };
-                
             }
-          
         }
 
         public async Task<object> Login(LoginDto dto)
@@ -104,7 +102,6 @@ namespace RoleBasedAuth.Services
             {
 
                 return new { result = "", message = ex.Message, success = false };
-
             }
         }
 
@@ -172,5 +169,30 @@ namespace RoleBasedAuth.Services
                 return new { success = false, message = ex.Message };
             }
         }
+
+        public async Task<object> CheckPasswordAsync(string userId, string password)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(userId))
+                {
+                    return new { success = false, message = "User id is required." };
+                }
+
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null)
+                {
+                    return new { success = false, message = "User not found." };
+                }
+
+                var isValidPassword = await _userManager.CheckPasswordAsync(user, password);
+                return new { success = isValidPassword };
+            }
+            catch (Exception ex)
+            {
+                return new { success = false, message = ex.Message };
+            }
+        }
+       
     }
 }

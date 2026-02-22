@@ -20,7 +20,7 @@ namespace BackEnd.Api.Controllers
             _usersService = usersService;
         }
 
-        /// <summary>Bejelentkezett felhasználó ranglistájának frissítése.</summary>
+        /// <summary>Bejelentkezett felhasználó pontszámának frissítése.</summary>
         [Authorize]
         [HttpPut("me")]
         public async Task<IActionResult> UpdateMyScoreboard([FromBody] ScoreboardSendInputDto dto, CancellationToken cancellationToken)

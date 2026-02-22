@@ -77,7 +77,7 @@ namespace BackEnd.Application.Services
             return new ResponseOutputDto { Message = "User deleted successfuly", Success = true };
         }
 
-        public async Task<ResponseOutputDto> GetUserCountAsync(CancellationToken cancellationToken = default)
+        public async Task<ResponseOutputDto> GetPlayerCountAsync(CancellationToken cancellationToken = default)
         {
             int? count = await _context.Users.CountAsync(cancellationToken);
             if (count == null) return new ResponseOutputDto { Message = "Couldn't fetch player count!", Success = false };
@@ -87,29 +87,29 @@ namespace BackEnd.Application.Services
             };
             return new ResponseOutputDto { Message = "Successful fetch!", Success = true, Result = playerCount };
         }
-        public async Task<ResponseOutputDto> GetAllUserScoreboardAsync(CancellationToken cancellationToken = default)
+        public async Task<ResponseOutputDto> GetLeaderboardAsync(CancellationToken cancellationToken = default)
         {
             var users = await _context.Users.ToListAsync(cancellationToken);
             var scores = await _context.Scoreboards.ToListAsync(cancellationToken);
 
             if (users == null && scores == null) return new ResponseOutputDto { Message = "User not found!", Success = false };
 
-            var userScoreboardList = new List<UserScoreboardGetOutputAllDto>();
+            var leaderboardList = new List<UserLeaderboardGetOutputAllDto>();
             foreach (var user in users)
             {
                 var score = scores.Find(x => x.UserId == user.Id);
                 if (score == null) continue;
 
-                var userScoreboard = new UserScoreboardGetOutputAllDto
+                var entry = new UserLeaderboardGetOutputAllDto
                 {
                     Name = user.Name,
                     TotalScore = score.TotalScore,
                     TotalXp = score.TotalXp,
                     ProfilePictureUrl = await _pictureHelper.GetProfilePictureUrlAsync(user.Id)
                 };
-                userScoreboardList.Add(userScoreboard);
+                leaderboardList.Add(entry);
             }
-            return new ResponseOutputDto { Message = "Succesful fetch!", Success = true, Result = userScoreboardList };
+            return new ResponseOutputDto { Message = "Succesful fetch!", Success = true, Result = leaderboardList };
         }
         public async Task<ResponseOutputDto> GetByIdResultAsync(int id, CancellationToken cancellationToken = default)
         {

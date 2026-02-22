@@ -16,8 +16,8 @@ namespace BackEnd.Application.Services
         Task<ResponseOutputDto> DeleteAsync(int id, CancellationToken cancellationToken = default);
 
         // Gets
-        Task<ResponseOutputDto> GetUserCountAsync(CancellationToken cancellationToken = default);
-        Task<ResponseOutputDto> GetAllUserScoreboardAsync(CancellationToken cancellationToken = default);
+        Task<ResponseOutputDto> GetPlayerCountAsync(CancellationToken cancellationToken = default);
+        Task<ResponseOutputDto> GetLeaderboardAsync(CancellationToken cancellationToken = default);
         Task<ResponseOutputDto> GetByIdResultAsync(int id, CancellationToken cancellationToken = default);
         
         // Updates

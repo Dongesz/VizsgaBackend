@@ -56,5 +56,16 @@ namespace RoleBasedAuth.Controllers
             }
             return BadRequest();
         }
+
+        /// <summary>Admin/User váltás: ha a felhasználónak van Admin joga, Userre vált; ha nincs (üres vagy csak User), Admint kap.</summary>
+        [Authorize(Roles = "Admin")]
+        [HttpPost("toggleadminrole")]
+        public async Task<IActionResult> ToggleAdminRole([FromBody] ToggleAdminRoleDto dto)
+        {
+            if (dto == null || string.IsNullOrWhiteSpace(dto.UserName))
+                return BadRequest("UserName is required.");
+            var result = await auth.ToggleAdminRole(dto);
+            return Ok(result);
+        }
     }
 }

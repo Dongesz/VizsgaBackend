@@ -45,6 +45,47 @@ namespace RoleBasedAuth.Services
             }
         }
 
+        public async Task<object> ToggleAdminRole(ToggleAdminRoleDto dto)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(dto?.UserName))
+                    return new { result = (object?)null, message = "UserName is required.", success = false };
+
+                var user = await _userManager.FindByNameAsync(dto.UserName);
+                if (user == null)
+                    return new { result = (object?)null, message = "User not found.", success = false };
+
+                const string adminRole = "Admin";
+                const string userRole = "User";
+
+                if (!await _roleManager.RoleExistsAsync(adminRole))
+                    await _roleManager.CreateAsync(new IdentityRole(adminRole));
+                if (!await _roleManager.RoleExistsAsync(userRole))
+                    await _roleManager.CreateAsync(new IdentityRole(userRole));
+
+                var roles = await _userManager.GetRolesAsync(user);
+                var hasAdmin = roles.Contains(adminRole, StringComparer.OrdinalIgnoreCase);
+
+                if (hasAdmin)
+                {
+                    await _userManager.RemoveFromRoleAsync(user, adminRole);
+                    await _userManager.AddToRoleAsync(user, userRole);
+                    return new { result = user, message = "Role switched to User.", success = true };
+                }
+                else
+                {
+                    await _userManager.RemoveFromRoleAsync(user, userRole);
+                    await _userManager.AddToRoleAsync(user, adminRole);
+                    return new { result = user, message = "Role switched to Admin.", success = true };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new { result = (object?)null, message = ex.Message, success = false };
+            }
+        }
+
         public async Task<object> Login(LoginDto dto)
         {
             var user = await _userManager.FindByNameAsync(dto.UserName);
@@ -93,7 +134,7 @@ namespace RoleBasedAuth.Services
                 {
                     var userReturn = await _context.ApplicationUsers.FirstOrDefaultAsync(x => x.UserName == registerRequestDto.UserName);
 
-                    return new { result = userReturn, message = "Sikeres Regisztracio!", success = true };
+                    return new { result = userReturn, message = "Account created successfully!", success = true };
                 }
 
                 return new { result = "", message = result.Errors.FirstOrDefault().Description };

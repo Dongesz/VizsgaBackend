@@ -86,7 +86,7 @@ namespace RoleBasedAuth
                     Scheme = "Bearer",
                     BearerFormat = "JWT",
                     In = ParameterLocation.Header,
-                    Description = "JWT token (e.g. from login)"
+                    Description = "JWT token"
                 });
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {

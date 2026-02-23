@@ -42,7 +42,7 @@ namespace BackEnd.Application.Services
                 _httpClient.BaseAddress = new Uri(baseUrl);
             }
 
-            using var request = new HttpRequestMessage(HttpMethod.Delete, $"api/Auth/users/{authUserId}");
+            using var request = new HttpRequestMessage(HttpMethod.Delete, $"api/auth/Auth/users/{authUserId}");
             request.Headers.Add("X-Internal-Api-Key", apiKey);
 
             using var response = await _httpClient.SendAsync(request, cancellationToken);

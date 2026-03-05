@@ -104,7 +104,7 @@ namespace BackEnd.Application.Services
                 {
                     Name = user.Name,
                     TotalScore = score.TotalScore,
-                    TotalXp = score.TotalXp,
+                    TotalKills = score.TotalKills,
                     ProfilePictureUrl = await _pictureHelper.GetProfilePictureUrlAsync(user.Id)
                 };
                 leaderboardList.Add(entry);
@@ -126,7 +126,7 @@ namespace BackEnd.Application.Services
                 Bio = user.Bio,
                 ProfilePictureUrl = await _pictureHelper.GetProfilePictureUrlAsync(id),
                 TotalScore = score.TotalScore,
-                TotalXp = score.TotalXp,
+                TotalKills = score.TotalKills,
                 CreatedAt = user.CreatedAt,
                 UpdatedAt = user.UpdatedAt
             };
@@ -315,7 +315,7 @@ namespace BackEnd.Application.Services
             {
                 UserId = user.Id,
                 TotalScore = 0,
-                TotalXp = 0,
+                TotalKills = 0,
                 LastUpdated = DateTime.UtcNow
             };
 

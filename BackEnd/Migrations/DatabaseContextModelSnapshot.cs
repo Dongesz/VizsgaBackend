@@ -43,7 +43,7 @@ namespace BackEnd.Migrations
                         .HasDefaultValue(0)
                         .HasColumnName("TotalScore");
 
-                    b.Property<int?>("TotalXp")
+                    b.Property<int?>("TotalKills")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")

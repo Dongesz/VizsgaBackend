@@ -6,7 +6,7 @@ namespace BackEnd.Application.DTOs.User
 
         public int? TotalScore { get; set; }
 
-        public int? TotalXp { get; set; }
+        public int? TotalKills { get; set; }
         public string ProfilePictureUrl { get; set; } = null!;
     }
 }

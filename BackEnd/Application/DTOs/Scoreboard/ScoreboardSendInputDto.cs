@@ -7,6 +7,6 @@ namespace BackEnd.Application.DTOs.Scoreboard
     {
         public int? TotalScore { get; set; }
 
-        public int? TotalXp { get; set; }
+        public int? TotalKills { get; set; }
     }
 }

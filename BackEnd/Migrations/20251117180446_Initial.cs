@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
@@ -47,7 +47,7 @@ namespace BackEnd.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     TotalScore = table.Column<int>(type: "int", nullable: true, defaultValue: 0),
-                    TotalXp = table.Column<int>(type: "int", nullable: true),
+                    TotalKills = table.Column<int>(type: "int", nullable: true),
                     LastUpdate = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>

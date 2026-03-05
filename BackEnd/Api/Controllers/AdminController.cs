@@ -120,7 +120,7 @@ namespace BackEnd.Api.Controllers.Admin
             }
         }
 
-        /// <summary>Felhasználó pontszámának frissítése azonosító alapján.</summary>
+        /// <summary>Felhasználó pontszámának frissítése felhasználói azonosító (UserId) alapján.</summary>
         [HttpPut("Scoreboard/{id:int}")]
         public async Task<IActionResult> UpdateScoreboard(int id, [FromBody] ScoreboardSendInputDto dto, CancellationToken cancellationToken)
         {

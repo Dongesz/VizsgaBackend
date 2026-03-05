@@ -20,7 +20,8 @@ namespace BackEnd.Application.Services
 
         public async Task<ResponseOutputDto> UpdateAsync(int id, ScoreboardSendInputDto dto, CancellationToken cancellationToken = default)
         {
-            var score = await _context.Scoreboards.FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+            // Admin endpoint: id is the UserId, not the Scoreboard primary key
+            var score = await _context.Scoreboards.FirstOrDefaultAsync(s => s.UserId == id, cancellationToken);
             if (score == null) return new ResponseOutputDto { Message = "Score not found!", Success = false };
             _mapper.Map(dto, score);
             score.LastUpdated = DateTime.UtcNow;

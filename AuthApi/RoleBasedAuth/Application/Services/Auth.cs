@@ -88,11 +88,23 @@ namespace RoleBasedAuth.Services
 
         public async Task<object> Login(LoginDto dto)
         {
-            var user = await _userManager.FindByNameAsync(dto.UserName);
+            if (string.IsNullOrWhiteSpace(dto?.UserName) || string.IsNullOrWhiteSpace(dto?.Password))
+            {
+                return new { message = "Login (username or email) and password are required!", success = false };
+            }
+
+            var login = dto.UserName.Trim();
+
+            var user = await _userManager.FindByNameAsync(login);
 
             if (user == null)
             {
-                return new { message = "Invalid username or password!", success = false };
+                user = await _userManager.FindByEmailAsync(login);
+            }
+
+            if (user == null)
+            {
+                return new { message = "Invalid username/email or password!", success = false };
             }
 
             var isValidPassword = await _userManager.CheckPasswordAsync(user, dto.Password);
@@ -113,7 +125,7 @@ namespace RoleBasedAuth.Services
                     user.UserName,
                     user.Email
                 },
-                token, 
+                token,
                 success = true
             };
         }

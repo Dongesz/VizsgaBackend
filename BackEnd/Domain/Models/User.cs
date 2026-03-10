@@ -12,7 +12,9 @@ public partial class User
 
     public string? Email { get; set; } = null!;
 
-    public string? Bio { get; set; } = null;
+    public string? Bio { get; set; } = "";
+
+    public string UserType { get; set; } = "User";
 
     public int? DefaultPictureUrl { get; set; } = null;
 

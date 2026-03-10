@@ -30,5 +30,22 @@ namespace RoleBasedAuth.Controllers
             var result = await auth.DeleteUserByIdAsync(authUserId);
             return Ok(result);
         }
+
+        /// <summary>Identity felhasználó felhasználónevének módosítása authUserId alapján. Helper endpoint, ne nagyon hasznald!</summary>
+        [HttpPut("users/{authUserId}/username")]
+        public async Task<IActionResult> UpdateIdentityUserName(
+            string authUserId,
+            [FromBody] string newUserName,
+            [FromHeader(Name = "X-Internal-Api-Key")] string? apiKey)
+        {
+            var configuredKey = configuration["AuthSettings:InternalApiKey"];
+            if (string.IsNullOrWhiteSpace(configuredKey) || string.IsNullOrWhiteSpace(apiKey) || !string.Equals(configuredKey, apiKey))
+            {
+                return Unauthorized(new { message = "Invalid internal API key." });
+            }
+
+            var result = await auth.UpdateUserNameAsync(authUserId, newUserName);
+            return Ok(result);
+        }
     }
 }

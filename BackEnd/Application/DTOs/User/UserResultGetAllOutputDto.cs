@@ -7,12 +7,12 @@ namespace BackEnd.Application.DTOs.User
 
         public string? Email { get; set; } = null!;
 
-        public string? Bio { get; set; } = null;
+        public string? Bio { get; set; } = "";
 
-        public string? UserType { get; set; }
+        public string? UserType { get; set; } = "User";
 
 
-        public string ProfilePictureUrl { get; set; } = null;
+        public string ProfilePictureUrl { get; set; } = "";
 
         public int? TotalScore { get; set; }
 

@@ -13,5 +13,6 @@ namespace RoleBasedAuth.Services
         Task<object> DeleteUserByIdAsync(string authUserId);
         Task<object> ChangePasswordAsync(string userId, ChangePasswordDto dto);
         Task<object> CheckPasswordAsync(string userId, string password);
+        Task<object> UpdateUserNameAsync(string authUserId, string newUserName);
     }
 }

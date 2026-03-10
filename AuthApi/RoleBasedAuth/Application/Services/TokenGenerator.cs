@@ -22,17 +22,23 @@ namespace RoleBasedAuth.Services
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(_jwtOptions.Secret);
 
+            // A szerepkörökből egy egyszerű "User" / "Admin" stringet számolunk ki.
+            var roleList = roles?.ToList() ?? new List<string>();
+            bool isAdmin = roleList.Any(r => string.Equals(r, "Admin", StringComparison.OrdinalIgnoreCase));
+            var userType = isAdmin ? "Admin" : "User";
+
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, applicationUser.Id),
-                new Claim(ClaimTypes.Name, applicationUser.UserName ?? ""),
-                new Claim(JwtRegisteredClaimNames.UniqueName, applicationUser.UserName ?? ""),
-                new Claim(ClaimTypes.Email, applicationUser.Email ?? ""),
-                new Claim(ClaimTypes.Role, roles.ToString() ?? "")
-
+                new Claim(ClaimTypes.Name, applicationUser.UserName ?? string.Empty),
+                new Claim(JwtRegisteredClaimNames.UniqueName, applicationUser.UserName ?? string.Empty),
+                new Claim(ClaimTypes.Email, applicationUser.Email ?? string.Empty),
+                // Egyszerűen olvasható típus: "User" vagy "Admin"
+                new Claim("userType", userType)
             };
 
-            claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
+            // Identity-nek továbbra is adjuk a konkrét role-okat (Admin, User, stb.)
+            claims.AddRange(roleList.Select(r => new Claim(ClaimTypes.Role, r)));
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {

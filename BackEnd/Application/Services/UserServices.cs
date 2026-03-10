@@ -68,6 +68,17 @@ namespace BackEnd.Application.Services
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
             if (user == null) return new ResponseOutputDto { Message = "User not found!", Success = false };
 
+            // Identity (AuthApi) felhasználó törlése is
+            var deletedInAuth = await _authApiClient.DeleteIdentityUserAsync(user.AuthUserId, cancellationToken);
+            if (!deletedInAuth)
+            {
+                return new ResponseOutputDto
+                {
+                    Message = "Failed to delete Identity user in AuthApi.",
+                    Success = false
+                };
+            }
+
             var scores = await _context.Scoreboards.Where(s => s.UserId == id).ToListAsync(cancellationToken);
             if (scores.Count > 0)
                 _context.Scoreboards.RemoveRange(scores);
@@ -105,7 +116,8 @@ namespace BackEnd.Application.Services
                     Name = user.Name,
                     TotalScore = score.TotalScore,
                     TotalKills = score.TotalKills,
-                    ProfilePictureUrl = await _pictureHelper.GetProfilePictureUrlAsync(user.Id)
+                    ProfilePictureUrl = await _pictureHelper.GetProfilePictureUrlAsync(user.Id),
+                    UserType = user.UserType
                 };
                 leaderboardList.Add(entry);
             }
@@ -118,27 +130,33 @@ namespace BackEnd.Application.Services
 
             if (user == null || score == null) return new ResponseOutputDto { Message = "User not found!", Success = false };
 
-            var UserResult = new UserResultGetAllOutputDto
-            {
-                Id = id,
-                Name = user.Name,
-                Email = user.Email,
-                Bio = user.Bio,
-                ProfilePictureUrl = await _pictureHelper.GetProfilePictureUrlAsync(id),
-                TotalScore = score.TotalScore,
-                TotalKills = score.TotalKills,
-                CreatedAt = user.CreatedAt,
-                UpdatedAt = user.UpdatedAt
-            };
+            var userResult = _mapper.Map<UserResultGetAllOutputDto>(user);
+            userResult.ProfilePictureUrl = await _pictureHelper.GetProfilePictureUrlAsync(id);
+            userResult.TotalScore = score.TotalScore;
+            userResult.TotalKills = score.TotalKills;
 
-            return new ResponseOutputDto { Message = "Succesful fetch!", Success = true, Result = UserResult };
+            return new ResponseOutputDto { Message = "Succesful fetch!", Success = true, Result = userResult };
         }
 
         public async Task<ResponseOutputDto> UpdateUserNameAsync(int id, UserNameUpdateInputDto dto, CancellationToken cancellationToken = default)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
             if (user == null) return new ResponseOutputDto { Message = "User not found!", Success = false };
-            user.Name = dto.Name;
+            var oldName = user.Name;
+            var newName = dto.Name;
+
+            // Identity (AuthApi) felhasználónév frissítése is
+            var updatedInAuth = await _authApiClient.UpdateIdentityUserNameAsync(user.AuthUserId, newName!, cancellationToken);
+            if (!updatedInAuth)
+            {
+                return new ResponseOutputDto
+                {
+                    Message = "Failed to update Identity username in AuthApi.",
+                    Success = false
+                };
+            }
+
+            user.Name = newName;
             await _context.SaveChangesAsync(cancellationToken);
 
             return new ResponseOutputDto { Message = "User name Updated successfully!", Success = true };
@@ -286,8 +304,18 @@ namespace BackEnd.Application.Services
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.AuthUserId == authUserId, cancellationToken);
 
+            // UserType frissítése a tokenből, ha van ilyen claim
+            var userTypeFromToken = userClaims.FindFirst("userType")?.Value ?? "User";
+
             if (user != null)
+            {
+                if (user.UserType != userTypeFromToken)
+                {
+                    user.UserType = userTypeFromToken;
+                    await _context.SaveChangesAsync(cancellationToken);
+                }
                 return user;
+            }
 
             var username =
                 userClaims.FindFirst(JwtRegisteredClaimNames.UniqueName)?.Value
@@ -303,6 +331,7 @@ namespace BackEnd.Application.Services
                 AuthUserId = authUserId,
                 Name = username,
                 Email = email,
+                UserType = userTypeFromToken,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };

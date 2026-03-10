@@ -95,8 +95,10 @@ namespace RoleBasedAuth.Services
 
             var login = dto.UserName.Trim();
 
+            // Először próbáljuk felhasználónévként
             var user = await _userManager.FindByNameAsync(login);
 
+            // Ha nem találjuk, próbáljuk e‑mailként
             if (user == null)
             {
                 user = await _userManager.FindByEmailAsync(login);
@@ -180,6 +182,39 @@ namespace RoleBasedAuth.Services
                 }
 
                 var errorMessage = result.Errors.FirstOrDefault()?.Description ?? "Unknown error during delete.";
+                return new { result = (object?)null, success = false, message = errorMessage };
+            }
+            catch (Exception ex)
+            {
+                return new { result = (object?)null, success = false, message = ex.Message };
+            }
+        }
+
+        public async Task<object> UpdateUserNameAsync(string authUserId, string newUserName)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(authUserId) || string.IsNullOrWhiteSpace(newUserName))
+                {
+                    return new { result = (object?)null, success = false, message = "Invalid auth user id or new user name." };
+                }
+
+                var user = await _userManager.FindByIdAsync(authUserId);
+                if (user == null)
+                {
+                    return new { result = (object?)null, success = false, message = "User not found." };
+                }
+
+                user.UserName = newUserName;
+                user.NormalizedUserName = newUserName.ToUpperInvariant();
+
+                var result = await _userManager.UpdateAsync(user);
+                if (result.Succeeded)
+                {
+                    return new { result = user, success = true, message = "Username updated successfully." };
+                }
+
+                var errorMessage = result.Errors.FirstOrDefault()?.Description ?? "Unknown error during username update.";
                 return new { result = (object?)null, success = false, message = errorMessage };
             }
             catch (Exception ex)

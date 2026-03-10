@@ -8,5 +8,7 @@ namespace BackEnd.Application.DTOs.User
 
         public int? TotalKills { get; set; }
         public string ProfilePictureUrl { get; set; } = null!;
+
+        public string? UserType { get; set; } = "User";
     }
 }

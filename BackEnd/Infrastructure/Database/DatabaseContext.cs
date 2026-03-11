@@ -18,6 +18,7 @@ public partial class DatabaseContext : DbContext
     public virtual DbSet<Scoreboard> Scoreboards { get; set; }
     public virtual DbSet<User> Users { get; set; }
     public virtual DbSet<DefaultPicture> DefaultPictures { get; set; }
+    public virtual DbSet<News> News { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -40,6 +41,16 @@ public partial class DatabaseContext : DbContext
             .IsUnique();
             b.Property(u => u.CreatedAt).HasColumnName("CreatedAt");
             b.Property(u => u.UpdatedAt).HasColumnName("UpdatedAt");
+        });
+        modelBuilder.Entity<News>(b =>
+        {
+            b.ToTable("News");
+            b.HasKey(n => n.Id);
+            b.Property(n => n.Id).HasColumnName("Id");
+            b.Property(n => n.Title).HasColumnName("Title").HasMaxLength(255);
+            b.Property(n => n.Image).HasColumnName("Image").HasMaxLength(500);
+            b.Property(n => n.Date).HasColumnName("Date");
+            b.Property(n => n.Content).HasColumnName("Content");
         });
         modelBuilder.Entity<Scoreboard>(b =>
         {
